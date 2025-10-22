@@ -1,0 +1,5 @@
+{
+  "isProduction": false,
+  "prodServer": "",
+  "devServer": "http://localhost:5000"
+}
