@@ -1,4 +1,5 @@
 export interface Student {
+  id: number;
   rfidTag: string;
   name: string;
   firstName: string;
@@ -29,4 +30,16 @@ export interface Department {
   departmentId: number;
   departmentName: string;
   acronym: string;
+}
+
+export interface Attendance {
+  id: number;
+  studentId: number;
+  name: string;
+  department: string;
+  year: number;
+  photo: string;
+  type: string;
+  timestamp: string;
+  date: string;
 }
