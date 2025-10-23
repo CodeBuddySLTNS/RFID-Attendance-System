@@ -25,10 +25,18 @@ export type Payment = {
   email: string;
 };
 
-export default function DataTablePagination({ data }: { data: Student[] }) {
+export default function DataTablePagination({
+  data,
+  editFn,
+  deleteFn,
+}: {
+  data: Student[];
+  editFn: (id: number) => void;
+  deleteFn: (id: number) => void;
+}) {
   const table = useReactTable({
     data,
-    columns: studentColumns,
+    columns: studentColumns(editFn, deleteFn),
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     initialState: {
