@@ -6,7 +6,7 @@ export const Attendance = {
   },
   getByDate: async (date, count = 3) => {
     return await sqlQuery(
-      `SELECT a.*, CONCAT(s.lastName, ', ', s.firstName, COALESCE(CONCAT(' ', s.middleInitial), '')) AS name, d.acronym AS department 
+      `SELECT a.*, CONCAT(s.lastName, ', ', s.firstName, COALESCE(CONCAT(' ', s.middleInitial, '.'), '')) AS name, d.acronym AS department, s.photo, s.year 
       FROM attendances a LEFT JOIN students s ON a.studentId = s.id 
       LEFT JOIN departments d ON s.departmentId = d.departmentId 
       WHERE a.date = ? ORDER BY a.timestamp DESC LIMIT ?`,
