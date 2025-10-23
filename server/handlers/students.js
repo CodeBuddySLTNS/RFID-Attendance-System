@@ -45,4 +45,54 @@ const addStudent = async (req, res) => {
   });
 };
 
-export default { getStudents, addStudent };
+const getStudent = async (req, res) => {
+  const { id } = req.params;
+  const student = await Student.getInfo(id);
+  if (!student) {
+    return res.status(404).json({ message: "Student not found" });
+  }
+  res.json(student);
+};
+
+const updateStudent = async (req, res) => {
+  const { id } = req.params;
+  const payload = {
+    ...req.body,
+    ...(req.file && { photo: `/uploads/${req.file.filename}` }),
+  };
+
+  const allowed = [
+    "rfidTag",
+    "firstName",
+    "middleInitial",
+    "lastName",
+    "birthDate",
+    "address",
+    "guardianName",
+    "departmentId",
+    "year",
+    "photo",
+  ];
+
+  const updateData = {};
+  for (const key of allowed) {
+    if (payload[key] !== undefined) updateData[key] = payload[key];
+  }
+
+  await Student.update(id, updateData);
+  res.json({ message: "Student updated successfully" });
+};
+
+const deleteStudent = async (req, res) => {
+  const { id } = req.params;
+  await Student.remove(id);
+  res.json({ message: "Student deleted successfully" });
+};
+
+export default {
+  getStudents,
+  addStudent,
+  getStudent,
+  updateStudent,
+  deleteStudent,
+};
