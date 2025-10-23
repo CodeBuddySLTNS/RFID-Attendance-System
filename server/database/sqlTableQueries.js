@@ -29,7 +29,7 @@ export const sqlTableQueries = `
         id INT PRIMARY KEY AUTO_INCREMENT,
         studentId INT NOT NULL,
         type ENUM('IN', 'OUT') NOT NULL,
-        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+        timestamp DATETIME NOT NULL,
         date DATE NOT NULL,
         FOREIGN KEY (studentId) REFERENCES students(id) ON DELETE CASCADE
     ); 
