@@ -1,12 +1,16 @@
 import type { Student } from "@/types/data.types";
 import type { ColumnDef } from "@tanstack/react-table";
 import config from "../../system.config.json";
+import { Edit, Trash2 } from "lucide-react";
 
 const url = config.isProduction
   ? config.prodServer + "/api"
   : config.devServer + "/api";
 
-export const studentColumns: ColumnDef<Student>[] = [
+export const studentColumns: (
+  editFn: (id: number) => void,
+  deleteFn: (id: number) => void
+) => ColumnDef<Student>[] = (editFn, deleteFn) => [
   {
     accessorKey: "name",
     header: "Name",
@@ -74,5 +78,24 @@ export const studentColumns: ColumnDef<Student>[] = [
     cell: ({ row }) => (
       <div className="text-center">{row.getValue("guardianName")}</div>
     ),
+  },
+  {
+    id: "actions",
+    header: () => <div className="text-center">Actions</div>,
+    cell: ({ row }) => {
+      const studentId = row.original.id;
+      return (
+        <div className="flex gap-1 justify-center">
+          <Edit
+            className="w-9 rounded p-0.5 py-1 bg-green-400 shadow"
+            onClick={() => editFn(studentId)}
+          />
+          <Trash2
+            className="w-9 rounded p-0.5 py-1 bg-red-400 shadow"
+            onClick={() => deleteFn(studentId)}
+          />
+        </div>
+      );
+    },
   },
 ];
