@@ -101,36 +101,37 @@ export const AddStudent = () => {
   };
 
   return (
-    <div className="p-10">
-      <Card className="max-w-3xl mx-auto gap-1">
+    <div className="p-5 px-8">
+      <Card className="w-full mx-auto gap-1">
         <CardHeader className="gap-1 text-center">
-          <CardTitle className="text-2xl">Add New Student</CardTitle>
+          <CardTitle className="text-xl">Add New Student</CardTitle>
           <CardDescription>Fill out the required fields below.</CardDescription>
         </CardHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="px-6 mt-4 space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="px-6 mt-4">
           <FieldSet>
-            <Field>
-              <FieldLabel>
-                <FieldTitle>RFID Tag</FieldTitle>
-              </FieldLabel>
-              <FieldContent>
-                <input
-                  className="w-full rounded-md border px-3 py-2"
-                  {...register("rfidTag", { required: "RFID tag is required" })}
-                />
-                <FieldError
-                  errors={[
-                    errors.rfidTag
-                      ? { message: errors.rfidTag.message }
-                      : undefined,
-                  ]}
-                />
-              </FieldContent>
-            </Field>
-
-            <FieldGroup className="w-full grid grid-cols-[1fr_1fr_max-content] space-y-2">
-              <Field>
+            <FieldGroup className="w-full grid grid-cols-[1fr_1fr_1fr_max-content]">
+              <Field className="gap-0.5">
+                <FieldLabel>
+                  <FieldTitle>RFID Tag</FieldTitle>
+                </FieldLabel>
+                <FieldContent>
+                  <input
+                    className="w-full rounded-md border px-3 py-2"
+                    {...register("rfidTag", {
+                      required: "RFID tag is required",
+                    })}
+                  />
+                  <FieldError
+                    errors={[
+                      errors.rfidTag
+                        ? { message: errors.rfidTag.message }
+                        : undefined,
+                    ]}
+                  />
+                </FieldContent>
+              </Field>
+              <Field className="gap-0.5">
                 <FieldLabel>
                   <FieldTitle>Last name</FieldTitle>
                 </FieldLabel>
@@ -151,7 +152,7 @@ export const AddStudent = () => {
                 </FieldContent>
               </Field>
 
-              <Field>
+              <Field className="gap-0.5">
                 <FieldLabel>
                   <FieldTitle>First name</FieldTitle>
                 </FieldLabel>
@@ -172,7 +173,7 @@ export const AddStudent = () => {
                 </FieldContent>
               </Field>
 
-              <Field>
+              <Field className="gap-0.5">
                 <FieldLabel className="flex justify-center">
                   <FieldTitle>MI</FieldTitle>
                 </FieldLabel>
@@ -186,70 +187,74 @@ export const AddStudent = () => {
               </Field>
             </FieldGroup>
 
-            <Field>
-              <FieldLabel>
-                <FieldTitle>Birth date</FieldTitle>
-              </FieldLabel>
-              <FieldContent>
-                <input
-                  type="date"
-                  className="rounded-md border px-3 py-2"
-                  {...register("birthDate", {
-                    required: "Birth date is required",
-                  })}
-                />
-                <FieldError
-                  errors={[
-                    errors.birthDate
-                      ? { message: errors.birthDate.message }
-                      : undefined,
-                  ]}
-                />
-              </FieldContent>
-            </Field>
+            <FieldGroup className="w-full grid grid-cols-3">
+              <Field className="gap-0.5">
+                <FieldLabel>
+                  <FieldTitle>Birth date</FieldTitle>
+                </FieldLabel>
+                <FieldContent>
+                  <input
+                    type="date"
+                    className="rounded-md border px-3 py-2"
+                    {...register("birthDate", {
+                      required: "Birth date is required",
+                    })}
+                  />
+                  <FieldError
+                    errors={[
+                      errors.birthDate
+                        ? { message: errors.birthDate.message }
+                        : undefined,
+                    ]}
+                  />
+                </FieldContent>
+              </Field>
 
-            <Field>
-              <FieldLabel>
-                <FieldTitle>Address</FieldTitle>
-              </FieldLabel>
-              <FieldContent>
-                <input
-                  className="rounded-md border px-3 py-2"
-                  {...register("address", { required: "Address is required" })}
-                />
-                <FieldError
-                  errors={[
-                    errors.address
-                      ? { message: errors.address.message }
-                      : undefined,
-                  ]}
-                />
-              </FieldContent>
-            </Field>
+              <Field className="gap-0.5">
+                <FieldLabel>
+                  <FieldTitle>Address</FieldTitle>
+                </FieldLabel>
+                <FieldContent>
+                  <input
+                    className="rounded-md border px-3 py-2"
+                    {...register("address", {
+                      required: "Address is required",
+                    })}
+                  />
+                  <FieldError
+                    errors={[
+                      errors.address
+                        ? { message: errors.address.message }
+                        : undefined,
+                    ]}
+                  />
+                </FieldContent>
+              </Field>
 
-            <Field>
-              <FieldLabel>
-                <FieldTitle>Guardian name</FieldTitle>
-              </FieldLabel>
-              <FieldContent>
-                <input
-                  className="rounded-md border px-3 py-2"
-                  {...register("guardianName", {
-                    required: "Guardian name is required",
-                  })}
-                />
-                <FieldError
-                  errors={[
-                    errors.guardianName
-                      ? { message: errors.guardianName.message }
-                      : undefined,
-                  ]}
-                />
-              </FieldContent>
-            </Field>
+              <Field className="gap-0.5">
+                <FieldLabel>
+                  <FieldTitle>Guardian name</FieldTitle>
+                </FieldLabel>
+                <FieldContent>
+                  <input
+                    className="rounded-md border px-3 py-2"
+                    {...register("guardianName", {
+                      required: "Guardian name is required",
+                    })}
+                  />
+                  <FieldError
+                    errors={[
+                      errors.guardianName
+                        ? { message: errors.guardianName.message }
+                        : undefined,
+                    ]}
+                  />
+                </FieldContent>
+              </Field>
+            </FieldGroup>
 
             <FieldGroup className="w-full grid grid-cols-[2fr_1fr]">
-              <Field>
+              <Field className="gap-0.5">
                 <FieldLabel>
                   <FieldTitle>Department</FieldTitle>
                 </FieldLabel>
@@ -302,7 +307,7 @@ export const AddStudent = () => {
                 </FieldContent>
               </Field>
 
-              <Field>
+              <Field className="gap-0.5">
                 <FieldLabel>
                   <FieldTitle>Year</FieldTitle>
                 </FieldLabel>
@@ -328,7 +333,7 @@ export const AddStudent = () => {
               </Field>
             </FieldGroup>
 
-            <Field>
+            <Field className="gap-0.5">
               <FieldLabel>
                 <FieldTitle>Photo</FieldTitle>
               </FieldLabel>

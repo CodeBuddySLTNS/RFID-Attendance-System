@@ -250,7 +250,7 @@ export const Homepage = () => {
                 </div>
 
                 <div className="w-full grid grid-rows-[1fr_max-content] gap-1">
-                  {attendance?.name && (
+                  {attendance?.name ? (
                     <div
                       className={`rounded border bg-gray-100 bg-cover bg-center`}
                       style={{
@@ -261,6 +261,8 @@ export const Homepage = () => {
                         })`,
                       }}
                     ></div>
+                  ) : (
+                    <div className="w-full rounded bg-gray-100"></div>
                   )}
                   <div className="w-full p-1 text-center font-extrabold text-white rounded bg-gray-600">
                     <h2>{attendance?.name ?? "NO DATA"}</h2>

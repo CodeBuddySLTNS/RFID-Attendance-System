@@ -1,7 +1,9 @@
 import {
   Field,
   FieldContent,
+  FieldDescription,
   FieldError,
+  FieldGroup,
   FieldLabel,
   FieldSet,
   FieldTitle,
@@ -119,8 +121,8 @@ export const EditStudent = () => {
   if (isLoading) return <div className="p-10">Loading...</div>;
 
   return (
-    <div className="p-10">
-      <Card className="max-w-3xl mx-auto gap-1">
+    <div className="p-5 px-8">
+      <Card className="w-full mx-auto gap-1">
         <CardHeader className="gap-1 text-center">
           <CardTitle className="text-2xl">Edit Student</CardTitle>
           <CardDescription>
@@ -128,116 +130,221 @@ export const EditStudent = () => {
           </CardDescription>
         </CardHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="px-6 mt-4 space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="px-6 mt-4">
           <FieldSet>
-            <Field>
+            <FieldGroup className="w-full grid grid-cols-[1fr_1fr_1fr_max-content]">
+              <Field className="gap-0.5">
+                <FieldLabel>
+                  <FieldTitle>RFID Tag</FieldTitle>
+                </FieldLabel>
+                <FieldContent>
+                  <input
+                    className="w-full rounded-md border px-3 py-2"
+                    {...register("rfidTag", {
+                      required: "RFID tag is required",
+                    })}
+                  />
+                  <FieldError
+                    errors={
+                      errors.rfidTag
+                        ? [{ message: errors.rfidTag.message }]
+                        : undefined
+                    }
+                  />
+                </FieldContent>
+              </Field>
+
+              <Field className="gap-0.5">
+                <FieldLabel>
+                  <FieldTitle>Last name</FieldTitle>
+                </FieldLabel>
+                <FieldContent>
+                  <input
+                    className="w-full rounded-md border px-3 py-2"
+                    {...register("lastName", {
+                      required: "Last name is required",
+                    })}
+                  />
+                  <FieldError
+                    errors={
+                      errors.lastName
+                        ? [{ message: errors.lastName.message }]
+                        : undefined
+                    }
+                  />
+                </FieldContent>
+              </Field>
+
+              <Field className="gap-0.5">
+                <FieldLabel>
+                  <FieldTitle>First name</FieldTitle>
+                </FieldLabel>
+                <FieldContent>
+                  <input
+                    className="w-full rounded-md border px-3 py-2"
+                    {...register("firstName", {
+                      required: "First name is required",
+                    })}
+                  />
+                  <FieldError
+                    errors={
+                      errors.firstName
+                        ? [{ message: errors.firstName.message }]
+                        : undefined
+                    }
+                  />
+                </FieldContent>
+              </Field>
+
+              <Field className="gap-0.5">
+                <FieldLabel className="flex justify-center">
+                  <FieldTitle>MI</FieldTitle>
+                </FieldLabel>
+                <FieldContent>
+                  <input
+                    className="w-10 rounded-md border px-3 py-2 text-center"
+                    maxLength={1}
+                    {...register("middleInitial")}
+                  />
+                </FieldContent>
+              </Field>
+            </FieldGroup>
+
+            <FieldGroup className="w-full grid grid-cols-3">
+              <Field className="gap-0.5">
+                <FieldLabel>
+                  <FieldTitle>Birth date</FieldTitle>
+                </FieldLabel>
+                <FieldContent>
+                  <input
+                    type="date"
+                    className="rounded-md border px-3 py-2"
+                    {...register("birthDate", {
+                      required: "Birth date is required",
+                    })}
+                  />
+                  <FieldError
+                    errors={
+                      errors.birthDate
+                        ? [{ message: errors.birthDate.message }]
+                        : undefined
+                    }
+                  />
+                </FieldContent>
+              </Field>
+
+              <Field className="gap-0.5">
+                <FieldLabel>
+                  <FieldTitle>Address</FieldTitle>
+                </FieldLabel>
+                <FieldContent>
+                  <input
+                    className="rounded-md border px-3 py-2"
+                    {...register("address", {
+                      required: "Address is required",
+                    })}
+                  />
+                  <FieldError
+                    errors={
+                      errors.address
+                        ? [{ message: errors.address.message }]
+                        : undefined
+                    }
+                  />
+                </FieldContent>
+              </Field>
+
+              <Field className="gap-0.5">
+                <FieldLabel>
+                  <FieldTitle>Guardian name</FieldTitle>
+                </FieldLabel>
+                <FieldContent>
+                  <input
+                    className="rounded-md border px-3 py-2"
+                    {...register("guardianName", {
+                      required: "Guardian name is required",
+                    })}
+                  />
+                  <FieldError
+                    errors={
+                      errors.guardianName
+                        ? [{ message: errors.guardianName.message }]
+                        : undefined
+                    }
+                  />
+                </FieldContent>
+              </Field>
+            </FieldGroup>
+
+            <FieldGroup className="w-full grid grid-cols-[2fr_1fr]">
+              <Field className="gap-0.5">
+                <FieldLabel>
+                  <FieldTitle>Department</FieldTitle>
+                </FieldLabel>
+                <FieldContent>
+                  <select
+                    className="w-full rounded-md border px-3 py-2"
+                    onChange={(e) =>
+                      setValue("departmentId", Number(e.target.value))
+                    }
+                    value={String(student?.departmentId ?? "")}
+                  >
+                    <option value="">Select department</option>
+                    {departments?.map((d) => (
+                      <option key={d.departmentId} value={d.departmentId}>
+                        {d.departmentName}
+                      </option>
+                    ))}
+                  </select>
+                  <FieldError
+                    errors={
+                      errors.departmentId
+                        ? [{ message: String(errors.departmentId?.message) }]
+                        : undefined
+                    }
+                  />
+                </FieldContent>
+              </Field>
+
+              <Field className="gap-0.5">
+                <FieldLabel>
+                  <FieldTitle>Year</FieldTitle>
+                </FieldLabel>
+                <FieldContent>
+                  <input
+                    type="number"
+                    min={1}
+                    max={4}
+                    className="w-full rounded-md border px-3 py-2"
+                    {...register("year", { valueAsNumber: true })}
+                  />
+                  <FieldError
+                    errors={
+                      errors.year
+                        ? [{ message: String(errors.year?.message) }]
+                        : undefined
+                    }
+                  />
+                </FieldContent>
+              </Field>
+            </FieldGroup>
+
+            <Field className="gap-0.5">
               <FieldLabel>
-                <FieldTitle>RFID Tag</FieldTitle>
+                <FieldTitle>Photo</FieldTitle>
               </FieldLabel>
               <FieldContent>
                 <input
-                  className="w-full rounded-md border px-3 py-2"
-                  {...register("rfidTag", { required: "RFID tag is required" })}
+                  className="border-1 border-dashed p-2 rounded"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setPhotoFile(e.target.files?.[0] ?? null)}
                 />
-                <FieldError
-                  errors={[
-                    errors.rfidTag
-                      ? { message: errors.rfidTag.message }
-                      : undefined,
-                  ]}
-                />
+                <FieldDescription>
+                  Upload a photo for the student (optional)
+                </FieldDescription>
               </FieldContent>
             </Field>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block mb-1">Last name</label>
-                <input
-                  className="w-full rounded-md border px-3 py-2"
-                  {...register("lastName", { required: true })}
-                />
-              </div>
-              <div>
-                <label className="block mb-1">First name</label>
-                <input
-                  className="w-full rounded-md border px-3 py-2"
-                  {...register("firstName", { required: true })}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block mb-1">Middle initial</label>
-              <input
-                className="w-20 rounded-md border px-3 py-2"
-                maxLength={1}
-                {...register("middleInitial")}
-              />
-            </div>
-
-            <div>
-              <label className="block mb-1">Birth date</label>
-              <input
-                type="date"
-                className="rounded-md border px-3 py-2"
-                {...register("birthDate", { required: true })}
-              />
-            </div>
-
-            <div>
-              <label className="block mb-1">Address</label>
-              <input
-                className="rounded-md border px-3 py-2 w-full"
-                {...register("address", { required: true })}
-              />
-            </div>
-
-            <div>
-              <label className="block mb-1">Guardian name</label>
-              <input
-                className="rounded-md border px-3 py-2 w-full"
-                {...register("guardianName", { required: true })}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block mb-1">Department</label>
-                <select
-                  className="w-full rounded-md border px-3 py-2"
-                  onChange={(e) =>
-                    setValue("departmentId", Number(e.target.value))
-                  }
-                  value={String(student?.departmentId ?? "")}
-                >
-                  <option value="">Select department</option>
-                  {departments?.map((d) => (
-                    <option key={d.departmentId} value={d.departmentId}>
-                      {d.departmentName}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block mb-1">Year</label>
-                <input
-                  type="number"
-                  min={1}
-                  max={4}
-                  className="w-full rounded-md border px-3 py-2"
-                  {...register("year", { valueAsNumber: true })}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block mb-1">Photo</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setPhotoFile(e.target.files?.[0] ?? null)}
-              />
-            </div>
 
             <div className="flex items-center gap-2">
               <Button type="submit" disabled={isPending}>
