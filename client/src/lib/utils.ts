@@ -13,6 +13,47 @@ const axiosInstance = Axios.create({
     : config.devServer + "/api",
 });
 
+axiosInstance.interceptors.request.use(
+  (reqConfig) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      reqConfig.headers.Authorization = `Bearer ${token}`;
+    }
+    return reqConfig;
+  },
+  (error) => Promise.reject(error)
+);
+
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      try {
+        const refreshToken = localStorage.getItem("refreshToken");
+        if (refreshToken) {
+          const res = await Axios.post(
+            (config.isProduction ? config.prodServer : config.devServer) + "/api/auth/refresh",
+            { refreshToken }
+          );
+          const { token } = res.data;
+          localStorage.setItem("token", token);
+          originalRequest.headers.Authorization = `Bearer ${token}`;
+          return axiosInstance(originalRequest);
+        }
+      } catch (refreshError) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("faculty");
+        window.location.href = "/login";
+        return Promise.reject(refreshError);
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const coleAPI =
   (endpoint: string, method?: string) => async (data: object) => {
     const token = localStorage.getItem("token");
@@ -45,7 +86,6 @@ export const coleAPI =
         return response.data;
 
       default:
-        // GET request
         response = await axiosInstance.get(endpoint, {
           headers: {
             Authorization: `Bearer ${token}`,

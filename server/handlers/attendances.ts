@@ -63,4 +63,10 @@ const addAttendance = async (req: Request, res: Response) => {
   });
 };
 
-export default { getAttendances, addAttendance };
+const getFacultyAttendances = async (req: Request, res: Response) => {
+  const facultyId = res.locals.facultyId;
+  const attendances = await Attendance.getAllByFaculty(Number(facultyId));
+  res.json(attendances);
+};
+
+export default { getAttendances, addAttendance, getFacultyAttendances };

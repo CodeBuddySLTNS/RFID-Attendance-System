@@ -7,6 +7,16 @@ datasource db {
   provider = "mysql"
 }
 
+model Faculty {
+  id       Int       @id @default(autoincrement())
+  name     String    @db.VarChar(100)
+  username String    @unique @db.VarChar(255)
+  password String    @db.VarChar(255)
+  students Student[]
+
+  @@map("faculties")
+}
+
 model Department {
   departmentId   Int       @id @default(autoincrement())
   acronym        String    @db.VarChar(15)
@@ -28,7 +38,9 @@ model Student {
   departmentId  Int?
   year          Int          @db.TinyInt
   photo         String?      @db.VarChar(255)
+  facultyId     Int?
   department    Department?  @relation(fields: [departmentId], references: [departmentId], onDelete: SetNull)
+  faculty       Faculty?     @relation(fields: [facultyId], references: [id], onDelete: Cascade)
   attendances   Attendance[]
 
   @@map("students")

@@ -120,6 +120,13 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.FacultyScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  username: 'username',
+  password: 'password'
+};
+
 exports.Prisma.DepartmentScalarFieldEnum = {
   departmentId: 'departmentId',
   acronym: 'acronym',
@@ -137,7 +144,8 @@ exports.Prisma.StudentScalarFieldEnum = {
   guardianName: 'guardianName',
   departmentId: 'departmentId',
   year: 'year',
-  photo: 'photo'
+  photo: 'photo',
+  facultyId: 'facultyId'
 };
 
 exports.Prisma.AttendanceScalarFieldEnum = {
@@ -151,6 +159,12 @@ exports.Prisma.AttendanceScalarFieldEnum = {
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.FacultyOrderByRelevanceFieldEnum = {
+  name: 'name',
+  username: 'username',
+  password: 'password'
 };
 
 exports.Prisma.DepartmentOrderByRelevanceFieldEnum = {
@@ -179,6 +193,7 @@ exports.Prisma.AttendanceOrderByRelevanceFieldEnum = {
 
 
 exports.Prisma.ModelName = {
+  Faculty: 'Faculty',
   Department: 'Department',
   Student: 'Student',
   Attendance: 'Attendance'

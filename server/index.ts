@@ -4,6 +4,8 @@ import "dotenv/config";
 import path from "path";
 
 import errorHandler from "./middlewares/error-handler.js";
+import authenticate from "./middlewares/authenticate.js";
+import authRoutes from "./routes/auth.js";
 import departmentRoutes from "./routes/departments.js";
 import studentRoutes from "./routes/students.js";
 import attendanceRoutes from "./routes/attendances.js";
@@ -15,6 +17,9 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/uploads", express.static(path.join(process.cwd(), "uploads")));
 
+app.use(authenticate);
+
+app.use("/api/auth", authRoutes);
 app.use("/api/departments", departmentRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/attendances", attendanceRoutes);

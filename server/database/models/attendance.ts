@@ -49,6 +49,42 @@ export const Attendance = {
     }) ?? undefined;
   },
 
+  getAllByFaculty: async (facultyId: number) => {
+    const rows = await prisma.attendance.findMany({
+      where: {
+        student: {
+          OR: [
+            { facultyId },
+            { facultyId: null }
+          ]
+        }
+      },
+      include: {
+        student: {
+          include: { department: true },
+        },
+      },
+      orderBy: { timestamp: "desc" },
+    });
+
+    return rows.map((r) => {
+      const s = r.student;
+      return {
+        id: r.id,
+        studentId: r.studentId,
+        type: r.type,
+        timestamp: r.timestamp,
+        date: r.date,
+        name: s
+          ? `${s.lastName}, ${s.firstName}${s.middleInitial ? ` ${s.middleInitial}.` : ""}`
+          : null,
+        department: s?.department?.acronym ?? null,
+        photo: s?.photo ?? null,
+        year: s?.year ?? null,
+      };
+    });
+  },
+
   add: async (studentId: number, type: string, timestamp: string, date: string) => {
     const result = await prisma.attendance.create({
       data: {

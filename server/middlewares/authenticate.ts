@@ -11,6 +11,7 @@ const authenticate = async (req: Request, res: Response, next: NextFunction) => 
       "/api/attendances/add",
       "/api/auth/login",
       "/api/auth/signup",
+      "/api/auth/refresh",
     ];
 
     if (
@@ -27,17 +28,17 @@ const authenticate = async (req: Request, res: Response, next: NextFunction) => 
         jwt.verify(token, secretKey, (err, verifiedToken) => {
           if (err) {
             return res
-              .status(status.FORBIDDEN)
+              .status(status.UNAUTHORIZED)
               .json({ message: "Access Denied!" });
           }
-          res.locals.userId = (verifiedToken as jwt.JwtPayload).userId;
+          res.locals.facultyId = (verifiedToken as jwt.JwtPayload).facultyId;
           next();
         });
       } else {
-        return res.status(status.FORBIDDEN).json({ message: "Access Denied!" });
+        return res.status(status.UNAUTHORIZED).json({ message: "Access Denied!" });
       }
     } else {
-      return res.status(status.FORBIDDEN).json({ message: "Access Denied!" });
+      return res.status(status.UNAUTHORIZED).json({ message: "Access Denied!" });
     }
   } catch (e) {
     throw new Error(String(e));

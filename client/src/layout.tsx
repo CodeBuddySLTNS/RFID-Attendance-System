@@ -10,6 +10,16 @@ const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const facultyRaw = localStorage.getItem("faculty");
+  const faculty = facultyRaw ? JSON.parse(facultyRaw) : null;
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("faculty");
+    window.location.href = "/login";
+  };
+
   return (
     <div className="w-full h-dvh grid grid-rows-[max-content_1fr] relative">
       <div className="w-full flex justify-between items-center gap-2 p-2 px-3 text-white bg-primary shadow">
@@ -45,12 +55,38 @@ const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
           <ul className="mt-4 flex flex-col gap-2">
             <Link to="/">
               <li className="w-full p-1 rounded text-center hover:bg-gray-500">
-                Home
+                RFID Scanner
               </li>
             </Link>
-            <li className="w-full p-1 rounded text-center hover:bg-gray-500">
-              <Link to="/manage-students">Manage Students</Link>
-            </li>
+            {faculty ? (
+              <>
+                <li className="w-full p-1 rounded text-center text-orange-400 font-semibold truncate">
+                  {faculty.name}
+                </li>
+                <Link to="/manage-students">
+                  <li className="w-full p-1 rounded text-center hover:bg-gray-500">
+                    Manage Students
+                  </li>
+                </Link>
+                <Link to="/attendance-reports">
+                  <li className="w-full p-1 rounded text-center hover:bg-gray-500">
+                    Attendance Reports
+                  </li>
+                </Link>
+                <li
+                  className="w-full p-1 rounded text-center hover:bg-red-600 text-red-100 cursor-pointer"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </li>
+              </>
+            ) : (
+              <Link to="/login">
+                <li className="w-full p-1 rounded text-center hover:bg-gray-500">
+                  Login
+                </li>
+              </Link>
+            )}
           </ul>
         </nav>
       </div>

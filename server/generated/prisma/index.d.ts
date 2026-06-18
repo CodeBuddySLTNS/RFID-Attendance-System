@@ -14,6 +14,11 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
 
 
 /**
+ * Model Faculty
+ * 
+ */
+export type Faculty = $Result.DefaultSelection<Prisma.$FacultyPayload>
+/**
  * Model Department
  * 
  */
@@ -38,8 +43,8 @@ export type Attendance = $Result.DefaultSelection<Prisma.$AttendancePayload>
  * const prisma = new PrismaClient({
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
- * // Fetch zero or more Departments
- * const departments = await prisma.department.findMany()
+ * // Fetch zero or more Faculties
+ * const faculties = await prisma.faculty.findMany()
  * ```
  *
  *
@@ -61,8 +66,8 @@ export class PrismaClient<
    * const prisma = new PrismaClient({
    *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
    * })
-   * // Fetch zero or more Departments
-   * const departments = await prisma.department.findMany()
+   * // Fetch zero or more Faculties
+   * const faculties = await prisma.faculty.findMany()
    * ```
    *
    *
@@ -151,6 +156,16 @@ export class PrismaClient<
   }>>
 
       /**
+   * `prisma.faculty`: Exposes CRUD operations for the **Faculty** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Faculties
+    * const faculties = await prisma.faculty.findMany()
+    * ```
+    */
+  get faculty(): Prisma.FacultyDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.department`: Exposes CRUD operations for the **Department** model.
     * Example usage:
     * ```ts
@@ -613,6 +628,7 @@ export namespace Prisma {
 
 
   export const ModelName: {
+    Faculty: 'Faculty',
     Department: 'Department',
     Student: 'Student',
     Attendance: 'Attendance'
@@ -631,10 +647,76 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "department" | "student" | "attendance"
+      modelProps: "faculty" | "department" | "student" | "attendance"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
+      Faculty: {
+        payload: Prisma.$FacultyPayload<ExtArgs>
+        fields: Prisma.FacultyFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FacultyFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FacultyPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FacultyFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FacultyPayload>
+          }
+          findFirst: {
+            args: Prisma.FacultyFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FacultyPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FacultyFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FacultyPayload>
+          }
+          findMany: {
+            args: Prisma.FacultyFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FacultyPayload>[]
+          }
+          create: {
+            args: Prisma.FacultyCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FacultyPayload>
+          }
+          createMany: {
+            args: Prisma.FacultyCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.FacultyDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FacultyPayload>
+          }
+          update: {
+            args: Prisma.FacultyUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FacultyPayload>
+          }
+          deleteMany: {
+            args: Prisma.FacultyDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FacultyUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.FacultyUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FacultyPayload>
+          }
+          aggregate: {
+            args: Prisma.FacultyAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFaculty>
+          }
+          groupBy: {
+            args: Prisma.FacultyGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FacultyGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FacultyCountArgs<ExtArgs>
+            result: $Utils.Optional<FacultyCountAggregateOutputType> | number
+          }
+        }
+      }
       Department: {
         payload: Prisma.$DepartmentPayload<ExtArgs>
         fields: Prisma.DepartmentFieldRefs
@@ -941,6 +1023,7 @@ export namespace Prisma {
     comments?: runtime.SqlCommenterPlugin[]
   }
   export type GlobalOmitConfig = {
+    faculty?: FacultyOmit
     department?: DepartmentOmit
     student?: StudentOmit
     attendance?: AttendanceOmit
@@ -1020,6 +1103,37 @@ export namespace Prisma {
 
 
   /**
+   * Count Type FacultyCountOutputType
+   */
+
+  export type FacultyCountOutputType = {
+    students: number
+  }
+
+  export type FacultyCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    students?: boolean | FacultyCountOutputTypeCountStudentsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * FacultyCountOutputType without action
+   */
+  export type FacultyCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FacultyCountOutputType
+     */
+    select?: FacultyCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * FacultyCountOutputType without action
+   */
+  export type FacultyCountOutputTypeCountStudentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StudentWhereInput
+  }
+
+
+  /**
    * Count Type DepartmentCountOutputType
    */
 
@@ -1084,6 +1198,989 @@ export namespace Prisma {
   /**
    * Models
    */
+
+  /**
+   * Model Faculty
+   */
+
+  export type AggregateFaculty = {
+    _count: FacultyCountAggregateOutputType | null
+    _avg: FacultyAvgAggregateOutputType | null
+    _sum: FacultySumAggregateOutputType | null
+    _min: FacultyMinAggregateOutputType | null
+    _max: FacultyMaxAggregateOutputType | null
+  }
+
+  export type FacultyAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type FacultySumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type FacultyMinAggregateOutputType = {
+    id: number | null
+    name: string | null
+    username: string | null
+    password: string | null
+  }
+
+  export type FacultyMaxAggregateOutputType = {
+    id: number | null
+    name: string | null
+    username: string | null
+    password: string | null
+  }
+
+  export type FacultyCountAggregateOutputType = {
+    id: number
+    name: number
+    username: number
+    password: number
+    _all: number
+  }
+
+
+  export type FacultyAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type FacultySumAggregateInputType = {
+    id?: true
+  }
+
+  export type FacultyMinAggregateInputType = {
+    id?: true
+    name?: true
+    username?: true
+    password?: true
+  }
+
+  export type FacultyMaxAggregateInputType = {
+    id?: true
+    name?: true
+    username?: true
+    password?: true
+  }
+
+  export type FacultyCountAggregateInputType = {
+    id?: true
+    name?: true
+    username?: true
+    password?: true
+    _all?: true
+  }
+
+  export type FacultyAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Faculty to aggregate.
+     */
+    where?: FacultyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Faculties to fetch.
+     */
+    orderBy?: FacultyOrderByWithRelationInput | FacultyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FacultyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Faculties from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Faculties.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Faculties
+    **/
+    _count?: true | FacultyCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FacultyAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FacultySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FacultyMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FacultyMaxAggregateInputType
+  }
+
+  export type GetFacultyAggregateType<T extends FacultyAggregateArgs> = {
+        [P in keyof T & keyof AggregateFaculty]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFaculty[P]>
+      : GetScalarType<T[P], AggregateFaculty[P]>
+  }
+
+
+
+
+  export type FacultyGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FacultyWhereInput
+    orderBy?: FacultyOrderByWithAggregationInput | FacultyOrderByWithAggregationInput[]
+    by: FacultyScalarFieldEnum[] | FacultyScalarFieldEnum
+    having?: FacultyScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FacultyCountAggregateInputType | true
+    _avg?: FacultyAvgAggregateInputType
+    _sum?: FacultySumAggregateInputType
+    _min?: FacultyMinAggregateInputType
+    _max?: FacultyMaxAggregateInputType
+  }
+
+  export type FacultyGroupByOutputType = {
+    id: number
+    name: string
+    username: string
+    password: string
+    _count: FacultyCountAggregateOutputType | null
+    _avg: FacultyAvgAggregateOutputType | null
+    _sum: FacultySumAggregateOutputType | null
+    _min: FacultyMinAggregateOutputType | null
+    _max: FacultyMaxAggregateOutputType | null
+  }
+
+  type GetFacultyGroupByPayload<T extends FacultyGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FacultyGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FacultyGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FacultyGroupByOutputType[P]>
+            : GetScalarType<T[P], FacultyGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FacultySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    username?: boolean
+    password?: boolean
+    students?: boolean | Faculty$studentsArgs<ExtArgs>
+    _count?: boolean | FacultyCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["faculty"]>
+
+
+
+  export type FacultySelectScalar = {
+    id?: boolean
+    name?: boolean
+    username?: boolean
+    password?: boolean
+  }
+
+  export type FacultyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "username" | "password", ExtArgs["result"]["faculty"]>
+  export type FacultyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    students?: boolean | Faculty$studentsArgs<ExtArgs>
+    _count?: boolean | FacultyCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $FacultyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Faculty"
+    objects: {
+      students: Prisma.$StudentPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      name: string
+      username: string
+      password: string
+    }, ExtArgs["result"]["faculty"]>
+    composites: {}
+  }
+
+  type FacultyGetPayload<S extends boolean | null | undefined | FacultyDefaultArgs> = $Result.GetResult<Prisma.$FacultyPayload, S>
+
+  type FacultyCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FacultyFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FacultyCountAggregateInputType | true
+    }
+
+  export interface FacultyDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Faculty'], meta: { name: 'Faculty' } }
+    /**
+     * Find zero or one Faculty that matches the filter.
+     * @param {FacultyFindUniqueArgs} args - Arguments to find a Faculty
+     * @example
+     * // Get one Faculty
+     * const faculty = await prisma.faculty.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FacultyFindUniqueArgs>(args: SelectSubset<T, FacultyFindUniqueArgs<ExtArgs>>): Prisma__FacultyClient<$Result.GetResult<Prisma.$FacultyPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Faculty that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FacultyFindUniqueOrThrowArgs} args - Arguments to find a Faculty
+     * @example
+     * // Get one Faculty
+     * const faculty = await prisma.faculty.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FacultyFindUniqueOrThrowArgs>(args: SelectSubset<T, FacultyFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FacultyClient<$Result.GetResult<Prisma.$FacultyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Faculty that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FacultyFindFirstArgs} args - Arguments to find a Faculty
+     * @example
+     * // Get one Faculty
+     * const faculty = await prisma.faculty.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FacultyFindFirstArgs>(args?: SelectSubset<T, FacultyFindFirstArgs<ExtArgs>>): Prisma__FacultyClient<$Result.GetResult<Prisma.$FacultyPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Faculty that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FacultyFindFirstOrThrowArgs} args - Arguments to find a Faculty
+     * @example
+     * // Get one Faculty
+     * const faculty = await prisma.faculty.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FacultyFindFirstOrThrowArgs>(args?: SelectSubset<T, FacultyFindFirstOrThrowArgs<ExtArgs>>): Prisma__FacultyClient<$Result.GetResult<Prisma.$FacultyPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Faculties that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FacultyFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Faculties
+     * const faculties = await prisma.faculty.findMany()
+     * 
+     * // Get first 10 Faculties
+     * const faculties = await prisma.faculty.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const facultyWithIdOnly = await prisma.faculty.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FacultyFindManyArgs>(args?: SelectSubset<T, FacultyFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FacultyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Faculty.
+     * @param {FacultyCreateArgs} args - Arguments to create a Faculty.
+     * @example
+     * // Create one Faculty
+     * const Faculty = await prisma.faculty.create({
+     *   data: {
+     *     // ... data to create a Faculty
+     *   }
+     * })
+     * 
+     */
+    create<T extends FacultyCreateArgs>(args: SelectSubset<T, FacultyCreateArgs<ExtArgs>>): Prisma__FacultyClient<$Result.GetResult<Prisma.$FacultyPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Faculties.
+     * @param {FacultyCreateManyArgs} args - Arguments to create many Faculties.
+     * @example
+     * // Create many Faculties
+     * const faculty = await prisma.faculty.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FacultyCreateManyArgs>(args?: SelectSubset<T, FacultyCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Faculty.
+     * @param {FacultyDeleteArgs} args - Arguments to delete one Faculty.
+     * @example
+     * // Delete one Faculty
+     * const Faculty = await prisma.faculty.delete({
+     *   where: {
+     *     // ... filter to delete one Faculty
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FacultyDeleteArgs>(args: SelectSubset<T, FacultyDeleteArgs<ExtArgs>>): Prisma__FacultyClient<$Result.GetResult<Prisma.$FacultyPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Faculty.
+     * @param {FacultyUpdateArgs} args - Arguments to update one Faculty.
+     * @example
+     * // Update one Faculty
+     * const faculty = await prisma.faculty.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FacultyUpdateArgs>(args: SelectSubset<T, FacultyUpdateArgs<ExtArgs>>): Prisma__FacultyClient<$Result.GetResult<Prisma.$FacultyPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Faculties.
+     * @param {FacultyDeleteManyArgs} args - Arguments to filter Faculties to delete.
+     * @example
+     * // Delete a few Faculties
+     * const { count } = await prisma.faculty.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FacultyDeleteManyArgs>(args?: SelectSubset<T, FacultyDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Faculties.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FacultyUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Faculties
+     * const faculty = await prisma.faculty.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FacultyUpdateManyArgs>(args: SelectSubset<T, FacultyUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Faculty.
+     * @param {FacultyUpsertArgs} args - Arguments to update or create a Faculty.
+     * @example
+     * // Update or create a Faculty
+     * const faculty = await prisma.faculty.upsert({
+     *   create: {
+     *     // ... data to create a Faculty
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Faculty we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FacultyUpsertArgs>(args: SelectSubset<T, FacultyUpsertArgs<ExtArgs>>): Prisma__FacultyClient<$Result.GetResult<Prisma.$FacultyPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Faculties.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FacultyCountArgs} args - Arguments to filter Faculties to count.
+     * @example
+     * // Count the number of Faculties
+     * const count = await prisma.faculty.count({
+     *   where: {
+     *     // ... the filter for the Faculties we want to count
+     *   }
+     * })
+    **/
+    count<T extends FacultyCountArgs>(
+      args?: Subset<T, FacultyCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FacultyCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Faculty.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FacultyAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FacultyAggregateArgs>(args: Subset<T, FacultyAggregateArgs>): Prisma.PrismaPromise<GetFacultyAggregateType<T>>
+
+    /**
+     * Group by Faculty.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FacultyGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FacultyGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FacultyGroupByArgs['orderBy'] }
+        : { orderBy?: FacultyGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FacultyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFacultyGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Faculty model
+   */
+  readonly fields: FacultyFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Faculty.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FacultyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    students<T extends Faculty$studentsArgs<ExtArgs> = {}>(args?: Subset<T, Faculty$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Faculty model
+   */
+  interface FacultyFieldRefs {
+    readonly id: FieldRef<"Faculty", 'Int'>
+    readonly name: FieldRef<"Faculty", 'String'>
+    readonly username: FieldRef<"Faculty", 'String'>
+    readonly password: FieldRef<"Faculty", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Faculty findUnique
+   */
+  export type FacultyFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Faculty
+     */
+    select?: FacultySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Faculty
+     */
+    omit?: FacultyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FacultyInclude<ExtArgs> | null
+    /**
+     * Filter, which Faculty to fetch.
+     */
+    where: FacultyWhereUniqueInput
+  }
+
+  /**
+   * Faculty findUniqueOrThrow
+   */
+  export type FacultyFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Faculty
+     */
+    select?: FacultySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Faculty
+     */
+    omit?: FacultyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FacultyInclude<ExtArgs> | null
+    /**
+     * Filter, which Faculty to fetch.
+     */
+    where: FacultyWhereUniqueInput
+  }
+
+  /**
+   * Faculty findFirst
+   */
+  export type FacultyFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Faculty
+     */
+    select?: FacultySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Faculty
+     */
+    omit?: FacultyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FacultyInclude<ExtArgs> | null
+    /**
+     * Filter, which Faculty to fetch.
+     */
+    where?: FacultyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Faculties to fetch.
+     */
+    orderBy?: FacultyOrderByWithRelationInput | FacultyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Faculties.
+     */
+    cursor?: FacultyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Faculties from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Faculties.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Faculties.
+     */
+    distinct?: FacultyScalarFieldEnum | FacultyScalarFieldEnum[]
+  }
+
+  /**
+   * Faculty findFirstOrThrow
+   */
+  export type FacultyFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Faculty
+     */
+    select?: FacultySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Faculty
+     */
+    omit?: FacultyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FacultyInclude<ExtArgs> | null
+    /**
+     * Filter, which Faculty to fetch.
+     */
+    where?: FacultyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Faculties to fetch.
+     */
+    orderBy?: FacultyOrderByWithRelationInput | FacultyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Faculties.
+     */
+    cursor?: FacultyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Faculties from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Faculties.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Faculties.
+     */
+    distinct?: FacultyScalarFieldEnum | FacultyScalarFieldEnum[]
+  }
+
+  /**
+   * Faculty findMany
+   */
+  export type FacultyFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Faculty
+     */
+    select?: FacultySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Faculty
+     */
+    omit?: FacultyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FacultyInclude<ExtArgs> | null
+    /**
+     * Filter, which Faculties to fetch.
+     */
+    where?: FacultyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Faculties to fetch.
+     */
+    orderBy?: FacultyOrderByWithRelationInput | FacultyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Faculties.
+     */
+    cursor?: FacultyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Faculties from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Faculties.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Faculties.
+     */
+    distinct?: FacultyScalarFieldEnum | FacultyScalarFieldEnum[]
+  }
+
+  /**
+   * Faculty create
+   */
+  export type FacultyCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Faculty
+     */
+    select?: FacultySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Faculty
+     */
+    omit?: FacultyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FacultyInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Faculty.
+     */
+    data: XOR<FacultyCreateInput, FacultyUncheckedCreateInput>
+  }
+
+  /**
+   * Faculty createMany
+   */
+  export type FacultyCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Faculties.
+     */
+    data: FacultyCreateManyInput | FacultyCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Faculty update
+   */
+  export type FacultyUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Faculty
+     */
+    select?: FacultySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Faculty
+     */
+    omit?: FacultyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FacultyInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Faculty.
+     */
+    data: XOR<FacultyUpdateInput, FacultyUncheckedUpdateInput>
+    /**
+     * Choose, which Faculty to update.
+     */
+    where: FacultyWhereUniqueInput
+  }
+
+  /**
+   * Faculty updateMany
+   */
+  export type FacultyUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Faculties.
+     */
+    data: XOR<FacultyUpdateManyMutationInput, FacultyUncheckedUpdateManyInput>
+    /**
+     * Filter which Faculties to update
+     */
+    where?: FacultyWhereInput
+    /**
+     * Limit how many Faculties to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Faculty upsert
+   */
+  export type FacultyUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Faculty
+     */
+    select?: FacultySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Faculty
+     */
+    omit?: FacultyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FacultyInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Faculty to update in case it exists.
+     */
+    where: FacultyWhereUniqueInput
+    /**
+     * In case the Faculty found by the `where` argument doesn't exist, create a new Faculty with this data.
+     */
+    create: XOR<FacultyCreateInput, FacultyUncheckedCreateInput>
+    /**
+     * In case the Faculty was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FacultyUpdateInput, FacultyUncheckedUpdateInput>
+  }
+
+  /**
+   * Faculty delete
+   */
+  export type FacultyDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Faculty
+     */
+    select?: FacultySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Faculty
+     */
+    omit?: FacultyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FacultyInclude<ExtArgs> | null
+    /**
+     * Filter which Faculty to delete.
+     */
+    where: FacultyWhereUniqueInput
+  }
+
+  /**
+   * Faculty deleteMany
+   */
+  export type FacultyDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Faculties to delete
+     */
+    where?: FacultyWhereInput
+    /**
+     * Limit how many Faculties to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Faculty.students
+   */
+  export type Faculty$studentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Student
+     */
+    select?: StudentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Student
+     */
+    omit?: StudentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentInclude<ExtArgs> | null
+    where?: StudentWhereInput
+    orderBy?: StudentOrderByWithRelationInput | StudentOrderByWithRelationInput[]
+    cursor?: StudentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StudentScalarFieldEnum | StudentScalarFieldEnum[]
+  }
+
+  /**
+   * Faculty without action
+   */
+  export type FacultyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Faculty
+     */
+    select?: FacultySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Faculty
+     */
+    omit?: FacultyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FacultyInclude<ExtArgs> | null
+  }
+
 
   /**
    * Model Department
@@ -2073,12 +3170,14 @@ export namespace Prisma {
     id: number | null
     departmentId: number | null
     year: number | null
+    facultyId: number | null
   }
 
   export type StudentSumAggregateOutputType = {
     id: number | null
     departmentId: number | null
     year: number | null
+    facultyId: number | null
   }
 
   export type StudentMinAggregateOutputType = {
@@ -2093,6 +3192,7 @@ export namespace Prisma {
     departmentId: number | null
     year: number | null
     photo: string | null
+    facultyId: number | null
   }
 
   export type StudentMaxAggregateOutputType = {
@@ -2107,6 +3207,7 @@ export namespace Prisma {
     departmentId: number | null
     year: number | null
     photo: string | null
+    facultyId: number | null
   }
 
   export type StudentCountAggregateOutputType = {
@@ -2121,6 +3222,7 @@ export namespace Prisma {
     departmentId: number
     year: number
     photo: number
+    facultyId: number
     _all: number
   }
 
@@ -2129,12 +3231,14 @@ export namespace Prisma {
     id?: true
     departmentId?: true
     year?: true
+    facultyId?: true
   }
 
   export type StudentSumAggregateInputType = {
     id?: true
     departmentId?: true
     year?: true
+    facultyId?: true
   }
 
   export type StudentMinAggregateInputType = {
@@ -2149,6 +3253,7 @@ export namespace Prisma {
     departmentId?: true
     year?: true
     photo?: true
+    facultyId?: true
   }
 
   export type StudentMaxAggregateInputType = {
@@ -2163,6 +3268,7 @@ export namespace Prisma {
     departmentId?: true
     year?: true
     photo?: true
+    facultyId?: true
   }
 
   export type StudentCountAggregateInputType = {
@@ -2177,6 +3283,7 @@ export namespace Prisma {
     departmentId?: true
     year?: true
     photo?: true
+    facultyId?: true
     _all?: true
   }
 
@@ -2278,6 +3385,7 @@ export namespace Prisma {
     departmentId: number | null
     year: number
     photo: string | null
+    facultyId: number | null
     _count: StudentCountAggregateOutputType | null
     _avg: StudentAvgAggregateOutputType | null
     _sum: StudentSumAggregateOutputType | null
@@ -2311,7 +3419,9 @@ export namespace Prisma {
     departmentId?: boolean
     year?: boolean
     photo?: boolean
+    facultyId?: boolean
     department?: boolean | Student$departmentArgs<ExtArgs>
+    faculty?: boolean | Student$facultyArgs<ExtArgs>
     attendances?: boolean | Student$attendancesArgs<ExtArgs>
     _count?: boolean | StudentCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["student"]>
@@ -2330,11 +3440,13 @@ export namespace Prisma {
     departmentId?: boolean
     year?: boolean
     photo?: boolean
+    facultyId?: boolean
   }
 
-  export type StudentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rfidTag" | "firstName" | "lastName" | "middleInitial" | "birthDate" | "address" | "guardianName" | "departmentId" | "year" | "photo", ExtArgs["result"]["student"]>
+  export type StudentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rfidTag" | "firstName" | "lastName" | "middleInitial" | "birthDate" | "address" | "guardianName" | "departmentId" | "year" | "photo" | "facultyId", ExtArgs["result"]["student"]>
   export type StudentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     department?: boolean | Student$departmentArgs<ExtArgs>
+    faculty?: boolean | Student$facultyArgs<ExtArgs>
     attendances?: boolean | Student$attendancesArgs<ExtArgs>
     _count?: boolean | StudentCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -2343,6 +3455,7 @@ export namespace Prisma {
     name: "Student"
     objects: {
       department: Prisma.$DepartmentPayload<ExtArgs> | null
+      faculty: Prisma.$FacultyPayload<ExtArgs> | null
       attendances: Prisma.$AttendancePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -2357,6 +3470,7 @@ export namespace Prisma {
       departmentId: number | null
       year: number
       photo: string | null
+      facultyId: number | null
     }, ExtArgs["result"]["student"]>
     composites: {}
   }
@@ -2698,6 +3812,7 @@ export namespace Prisma {
   export interface Prisma__StudentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     department<T extends Student$departmentArgs<ExtArgs> = {}>(args?: Subset<T, Student$departmentArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    faculty<T extends Student$facultyArgs<ExtArgs> = {}>(args?: Subset<T, Student$facultyArgs<ExtArgs>>): Prisma__FacultyClient<$Result.GetResult<Prisma.$FacultyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     attendances<T extends Student$attendancesArgs<ExtArgs> = {}>(args?: Subset<T, Student$attendancesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2739,6 +3854,7 @@ export namespace Prisma {
     readonly departmentId: FieldRef<"Student", 'Int'>
     readonly year: FieldRef<"Student", 'Int'>
     readonly photo: FieldRef<"Student", 'String'>
+    readonly facultyId: FieldRef<"Student", 'Int'>
   }
     
 
@@ -3103,6 +4219,25 @@ export namespace Prisma {
      */
     include?: DepartmentInclude<ExtArgs> | null
     where?: DepartmentWhereInput
+  }
+
+  /**
+   * Student.faculty
+   */
+  export type Student$facultyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Faculty
+     */
+    select?: FacultySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Faculty
+     */
+    omit?: FacultyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FacultyInclude<ExtArgs> | null
+    where?: FacultyWhereInput
   }
 
   /**
@@ -4134,6 +5269,16 @@ export namespace Prisma {
   export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+  export const FacultyScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    username: 'username',
+    password: 'password'
+  };
+
+  export type FacultyScalarFieldEnum = (typeof FacultyScalarFieldEnum)[keyof typeof FacultyScalarFieldEnum]
+
+
   export const DepartmentScalarFieldEnum: {
     departmentId: 'departmentId',
     acronym: 'acronym',
@@ -4154,7 +5299,8 @@ export namespace Prisma {
     guardianName: 'guardianName',
     departmentId: 'departmentId',
     year: 'year',
-    photo: 'photo'
+    photo: 'photo',
+    facultyId: 'facultyId'
   };
 
   export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeof StudentScalarFieldEnum]
@@ -4177,6 +5323,15 @@ export namespace Prisma {
   };
 
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+  export const FacultyOrderByRelevanceFieldEnum: {
+    name: 'name',
+    username: 'username',
+    password: 'password'
+  };
+
+  export type FacultyOrderByRelevanceFieldEnum = (typeof FacultyOrderByRelevanceFieldEnum)[keyof typeof FacultyOrderByRelevanceFieldEnum]
 
 
   export const DepartmentOrderByRelevanceFieldEnum: {
@@ -4251,6 +5406,59 @@ export namespace Prisma {
    */
 
 
+  export type FacultyWhereInput = {
+    AND?: FacultyWhereInput | FacultyWhereInput[]
+    OR?: FacultyWhereInput[]
+    NOT?: FacultyWhereInput | FacultyWhereInput[]
+    id?: IntFilter<"Faculty"> | number
+    name?: StringFilter<"Faculty"> | string
+    username?: StringFilter<"Faculty"> | string
+    password?: StringFilter<"Faculty"> | string
+    students?: StudentListRelationFilter
+  }
+
+  export type FacultyOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    username?: SortOrder
+    password?: SortOrder
+    students?: StudentOrderByRelationAggregateInput
+    _relevance?: FacultyOrderByRelevanceInput
+  }
+
+  export type FacultyWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    username?: string
+    AND?: FacultyWhereInput | FacultyWhereInput[]
+    OR?: FacultyWhereInput[]
+    NOT?: FacultyWhereInput | FacultyWhereInput[]
+    name?: StringFilter<"Faculty"> | string
+    password?: StringFilter<"Faculty"> | string
+    students?: StudentListRelationFilter
+  }, "id" | "username">
+
+  export type FacultyOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    username?: SortOrder
+    password?: SortOrder
+    _count?: FacultyCountOrderByAggregateInput
+    _avg?: FacultyAvgOrderByAggregateInput
+    _max?: FacultyMaxOrderByAggregateInput
+    _min?: FacultyMinOrderByAggregateInput
+    _sum?: FacultySumOrderByAggregateInput
+  }
+
+  export type FacultyScalarWhereWithAggregatesInput = {
+    AND?: FacultyScalarWhereWithAggregatesInput | FacultyScalarWhereWithAggregatesInput[]
+    OR?: FacultyScalarWhereWithAggregatesInput[]
+    NOT?: FacultyScalarWhereWithAggregatesInput | FacultyScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Faculty"> | number
+    name?: StringWithAggregatesFilter<"Faculty"> | string
+    username?: StringWithAggregatesFilter<"Faculty"> | string
+    password?: StringWithAggregatesFilter<"Faculty"> | string
+  }
+
   export type DepartmentWhereInput = {
     AND?: DepartmentWhereInput | DepartmentWhereInput[]
     OR?: DepartmentWhereInput[]
@@ -4314,7 +5522,9 @@ export namespace Prisma {
     departmentId?: IntNullableFilter<"Student"> | number | null
     year?: IntFilter<"Student"> | number
     photo?: StringNullableFilter<"Student"> | string | null
+    facultyId?: IntNullableFilter<"Student"> | number | null
     department?: XOR<DepartmentNullableScalarRelationFilter, DepartmentWhereInput> | null
+    faculty?: XOR<FacultyNullableScalarRelationFilter, FacultyWhereInput> | null
     attendances?: AttendanceListRelationFilter
   }
 
@@ -4330,7 +5540,9 @@ export namespace Prisma {
     departmentId?: SortOrderInput | SortOrder
     year?: SortOrder
     photo?: SortOrderInput | SortOrder
+    facultyId?: SortOrderInput | SortOrder
     department?: DepartmentOrderByWithRelationInput
+    faculty?: FacultyOrderByWithRelationInput
     attendances?: AttendanceOrderByRelationAggregateInput
     _relevance?: StudentOrderByRelevanceInput
   }
@@ -4350,7 +5562,9 @@ export namespace Prisma {
     departmentId?: IntNullableFilter<"Student"> | number | null
     year?: IntFilter<"Student"> | number
     photo?: StringNullableFilter<"Student"> | string | null
+    facultyId?: IntNullableFilter<"Student"> | number | null
     department?: XOR<DepartmentNullableScalarRelationFilter, DepartmentWhereInput> | null
+    faculty?: XOR<FacultyNullableScalarRelationFilter, FacultyWhereInput> | null
     attendances?: AttendanceListRelationFilter
   }, "id" | "rfidTag">
 
@@ -4366,6 +5580,7 @@ export namespace Prisma {
     departmentId?: SortOrderInput | SortOrder
     year?: SortOrder
     photo?: SortOrderInput | SortOrder
+    facultyId?: SortOrderInput | SortOrder
     _count?: StudentCountOrderByAggregateInput
     _avg?: StudentAvgOrderByAggregateInput
     _max?: StudentMaxOrderByAggregateInput
@@ -4388,6 +5603,7 @@ export namespace Prisma {
     departmentId?: IntNullableWithAggregatesFilter<"Student"> | number | null
     year?: IntWithAggregatesFilter<"Student"> | number
     photo?: StringNullableWithAggregatesFilter<"Student"> | string | null
+    facultyId?: IntNullableWithAggregatesFilter<"Student"> | number | null
   }
 
   export type AttendanceWhereInput = {
@@ -4448,6 +5664,56 @@ export namespace Prisma {
     date?: DateTimeWithAggregatesFilter<"Attendance"> | Date | string
   }
 
+  export type FacultyCreateInput = {
+    name: string
+    username: string
+    password: string
+    students?: StudentCreateNestedManyWithoutFacultyInput
+  }
+
+  export type FacultyUncheckedCreateInput = {
+    id?: number
+    name: string
+    username: string
+    password: string
+    students?: StudentUncheckedCreateNestedManyWithoutFacultyInput
+  }
+
+  export type FacultyUpdateInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    students?: StudentUpdateManyWithoutFacultyNestedInput
+  }
+
+  export type FacultyUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    students?: StudentUncheckedUpdateManyWithoutFacultyNestedInput
+  }
+
+  export type FacultyCreateManyInput = {
+    id?: number
+    name: string
+    username: string
+    password: string
+  }
+
+  export type FacultyUpdateManyMutationInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type FacultyUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+  }
+
   export type DepartmentCreateInput = {
     acronym: string
     departmentName: string
@@ -4502,6 +5768,7 @@ export namespace Prisma {
     year: number
     photo?: string | null
     department?: DepartmentCreateNestedOneWithoutStudentsInput
+    faculty?: FacultyCreateNestedOneWithoutStudentsInput
     attendances?: AttendanceCreateNestedManyWithoutStudentInput
   }
 
@@ -4517,6 +5784,7 @@ export namespace Prisma {
     departmentId?: number | null
     year: number
     photo?: string | null
+    facultyId?: number | null
     attendances?: AttendanceUncheckedCreateNestedManyWithoutStudentInput
   }
 
@@ -4531,6 +5799,7 @@ export namespace Prisma {
     year?: IntFieldUpdateOperationsInput | number
     photo?: NullableStringFieldUpdateOperationsInput | string | null
     department?: DepartmentUpdateOneWithoutStudentsNestedInput
+    faculty?: FacultyUpdateOneWithoutStudentsNestedInput
     attendances?: AttendanceUpdateManyWithoutStudentNestedInput
   }
 
@@ -4546,6 +5815,7 @@ export namespace Prisma {
     departmentId?: NullableIntFieldUpdateOperationsInput | number | null
     year?: IntFieldUpdateOperationsInput | number
     photo?: NullableStringFieldUpdateOperationsInput | string | null
+    facultyId?: NullableIntFieldUpdateOperationsInput | number | null
     attendances?: AttendanceUncheckedUpdateManyWithoutStudentNestedInput
   }
 
@@ -4561,6 +5831,7 @@ export namespace Prisma {
     departmentId?: number | null
     year: number
     photo?: string | null
+    facultyId?: number | null
   }
 
   export type StudentUpdateManyMutationInput = {
@@ -4587,6 +5858,7 @@ export namespace Prisma {
     departmentId?: NullableIntFieldUpdateOperationsInput | number | null
     year?: IntFieldUpdateOperationsInput | number
     photo?: NullableStringFieldUpdateOperationsInput | string | null
+    facultyId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type AttendanceCreateInput = {
@@ -4677,36 +5949,39 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type DepartmentOrderByRelevanceInput = {
-    fields: DepartmentOrderByRelevanceFieldEnum | DepartmentOrderByRelevanceFieldEnum[]
+  export type FacultyOrderByRelevanceInput = {
+    fields: FacultyOrderByRelevanceFieldEnum | FacultyOrderByRelevanceFieldEnum[]
     sort: SortOrder
     search: string
   }
 
-  export type DepartmentCountOrderByAggregateInput = {
-    departmentId?: SortOrder
-    acronym?: SortOrder
-    departmentName?: SortOrder
+  export type FacultyCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    username?: SortOrder
+    password?: SortOrder
   }
 
-  export type DepartmentAvgOrderByAggregateInput = {
-    departmentId?: SortOrder
+  export type FacultyAvgOrderByAggregateInput = {
+    id?: SortOrder
   }
 
-  export type DepartmentMaxOrderByAggregateInput = {
-    departmentId?: SortOrder
-    acronym?: SortOrder
-    departmentName?: SortOrder
+  export type FacultyMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    username?: SortOrder
+    password?: SortOrder
   }
 
-  export type DepartmentMinOrderByAggregateInput = {
-    departmentId?: SortOrder
-    acronym?: SortOrder
-    departmentName?: SortOrder
+  export type FacultyMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    username?: SortOrder
+    password?: SortOrder
   }
 
-  export type DepartmentSumOrderByAggregateInput = {
-    departmentId?: SortOrder
+  export type FacultySumOrderByAggregateInput = {
+    id?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -4741,6 +6016,38 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
+  }
+
+  export type DepartmentOrderByRelevanceInput = {
+    fields: DepartmentOrderByRelevanceFieldEnum | DepartmentOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type DepartmentCountOrderByAggregateInput = {
+    departmentId?: SortOrder
+    acronym?: SortOrder
+    departmentName?: SortOrder
+  }
+
+  export type DepartmentAvgOrderByAggregateInput = {
+    departmentId?: SortOrder
+  }
+
+  export type DepartmentMaxOrderByAggregateInput = {
+    departmentId?: SortOrder
+    acronym?: SortOrder
+    departmentName?: SortOrder
+  }
+
+  export type DepartmentMinOrderByAggregateInput = {
+    departmentId?: SortOrder
+    acronym?: SortOrder
+    departmentName?: SortOrder
+  }
+
+  export type DepartmentSumOrderByAggregateInput = {
+    departmentId?: SortOrder
   }
 
   export type StringNullableFilter<$PrismaModel = never> = {
@@ -4785,6 +6092,11 @@ export namespace Prisma {
     isNot?: DepartmentWhereInput | null
   }
 
+  export type FacultyNullableScalarRelationFilter = {
+    is?: FacultyWhereInput | null
+    isNot?: FacultyWhereInput | null
+  }
+
   export type AttendanceListRelationFilter = {
     every?: AttendanceWhereInput
     some?: AttendanceWhereInput
@@ -4818,12 +6130,14 @@ export namespace Prisma {
     departmentId?: SortOrder
     year?: SortOrder
     photo?: SortOrder
+    facultyId?: SortOrder
   }
 
   export type StudentAvgOrderByAggregateInput = {
     id?: SortOrder
     departmentId?: SortOrder
     year?: SortOrder
+    facultyId?: SortOrder
   }
 
   export type StudentMaxOrderByAggregateInput = {
@@ -4838,6 +6152,7 @@ export namespace Prisma {
     departmentId?: SortOrder
     year?: SortOrder
     photo?: SortOrder
+    facultyId?: SortOrder
   }
 
   export type StudentMinOrderByAggregateInput = {
@@ -4852,12 +6167,14 @@ export namespace Prisma {
     departmentId?: SortOrder
     year?: SortOrder
     photo?: SortOrder
+    facultyId?: SortOrder
   }
 
   export type StudentSumOrderByAggregateInput = {
     id?: SortOrder
     departmentId?: SortOrder
     year?: SortOrder
+    facultyId?: SortOrder
   }
 
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -4978,6 +6295,60 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type StudentCreateNestedManyWithoutFacultyInput = {
+    create?: XOR<StudentCreateWithoutFacultyInput, StudentUncheckedCreateWithoutFacultyInput> | StudentCreateWithoutFacultyInput[] | StudentUncheckedCreateWithoutFacultyInput[]
+    connectOrCreate?: StudentCreateOrConnectWithoutFacultyInput | StudentCreateOrConnectWithoutFacultyInput[]
+    createMany?: StudentCreateManyFacultyInputEnvelope
+    connect?: StudentWhereUniqueInput | StudentWhereUniqueInput[]
+  }
+
+  export type StudentUncheckedCreateNestedManyWithoutFacultyInput = {
+    create?: XOR<StudentCreateWithoutFacultyInput, StudentUncheckedCreateWithoutFacultyInput> | StudentCreateWithoutFacultyInput[] | StudentUncheckedCreateWithoutFacultyInput[]
+    connectOrCreate?: StudentCreateOrConnectWithoutFacultyInput | StudentCreateOrConnectWithoutFacultyInput[]
+    createMany?: StudentCreateManyFacultyInputEnvelope
+    connect?: StudentWhereUniqueInput | StudentWhereUniqueInput[]
+  }
+
+  export type StringFieldUpdateOperationsInput = {
+    set?: string
+  }
+
+  export type StudentUpdateManyWithoutFacultyNestedInput = {
+    create?: XOR<StudentCreateWithoutFacultyInput, StudentUncheckedCreateWithoutFacultyInput> | StudentCreateWithoutFacultyInput[] | StudentUncheckedCreateWithoutFacultyInput[]
+    connectOrCreate?: StudentCreateOrConnectWithoutFacultyInput | StudentCreateOrConnectWithoutFacultyInput[]
+    upsert?: StudentUpsertWithWhereUniqueWithoutFacultyInput | StudentUpsertWithWhereUniqueWithoutFacultyInput[]
+    createMany?: StudentCreateManyFacultyInputEnvelope
+    set?: StudentWhereUniqueInput | StudentWhereUniqueInput[]
+    disconnect?: StudentWhereUniqueInput | StudentWhereUniqueInput[]
+    delete?: StudentWhereUniqueInput | StudentWhereUniqueInput[]
+    connect?: StudentWhereUniqueInput | StudentWhereUniqueInput[]
+    update?: StudentUpdateWithWhereUniqueWithoutFacultyInput | StudentUpdateWithWhereUniqueWithoutFacultyInput[]
+    updateMany?: StudentUpdateManyWithWhereWithoutFacultyInput | StudentUpdateManyWithWhereWithoutFacultyInput[]
+    deleteMany?: StudentScalarWhereInput | StudentScalarWhereInput[]
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type StudentUncheckedUpdateManyWithoutFacultyNestedInput = {
+    create?: XOR<StudentCreateWithoutFacultyInput, StudentUncheckedCreateWithoutFacultyInput> | StudentCreateWithoutFacultyInput[] | StudentUncheckedCreateWithoutFacultyInput[]
+    connectOrCreate?: StudentCreateOrConnectWithoutFacultyInput | StudentCreateOrConnectWithoutFacultyInput[]
+    upsert?: StudentUpsertWithWhereUniqueWithoutFacultyInput | StudentUpsertWithWhereUniqueWithoutFacultyInput[]
+    createMany?: StudentCreateManyFacultyInputEnvelope
+    set?: StudentWhereUniqueInput | StudentWhereUniqueInput[]
+    disconnect?: StudentWhereUniqueInput | StudentWhereUniqueInput[]
+    delete?: StudentWhereUniqueInput | StudentWhereUniqueInput[]
+    connect?: StudentWhereUniqueInput | StudentWhereUniqueInput[]
+    update?: StudentUpdateWithWhereUniqueWithoutFacultyInput | StudentUpdateWithWhereUniqueWithoutFacultyInput[]
+    updateMany?: StudentUpdateManyWithWhereWithoutFacultyInput | StudentUpdateManyWithWhereWithoutFacultyInput[]
+    deleteMany?: StudentScalarWhereInput | StudentScalarWhereInput[]
+  }
+
   export type StudentCreateNestedManyWithoutDepartmentInput = {
     create?: XOR<StudentCreateWithoutDepartmentInput, StudentUncheckedCreateWithoutDepartmentInput> | StudentCreateWithoutDepartmentInput[] | StudentUncheckedCreateWithoutDepartmentInput[]
     connectOrCreate?: StudentCreateOrConnectWithoutDepartmentInput | StudentCreateOrConnectWithoutDepartmentInput[]
@@ -4992,10 +6363,6 @@ export namespace Prisma {
     connect?: StudentWhereUniqueInput | StudentWhereUniqueInput[]
   }
 
-  export type StringFieldUpdateOperationsInput = {
-    set?: string
-  }
-
   export type StudentUpdateManyWithoutDepartmentNestedInput = {
     create?: XOR<StudentCreateWithoutDepartmentInput, StudentUncheckedCreateWithoutDepartmentInput> | StudentCreateWithoutDepartmentInput[] | StudentUncheckedCreateWithoutDepartmentInput[]
     connectOrCreate?: StudentCreateOrConnectWithoutDepartmentInput | StudentCreateOrConnectWithoutDepartmentInput[]
@@ -5008,14 +6375,6 @@ export namespace Prisma {
     update?: StudentUpdateWithWhereUniqueWithoutDepartmentInput | StudentUpdateWithWhereUniqueWithoutDepartmentInput[]
     updateMany?: StudentUpdateManyWithWhereWithoutDepartmentInput | StudentUpdateManyWithWhereWithoutDepartmentInput[]
     deleteMany?: StudentScalarWhereInput | StudentScalarWhereInput[]
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type StudentUncheckedUpdateManyWithoutDepartmentNestedInput = {
@@ -5036,6 +6395,12 @@ export namespace Prisma {
     create?: XOR<DepartmentCreateWithoutStudentsInput, DepartmentUncheckedCreateWithoutStudentsInput>
     connectOrCreate?: DepartmentCreateOrConnectWithoutStudentsInput
     connect?: DepartmentWhereUniqueInput
+  }
+
+  export type FacultyCreateNestedOneWithoutStudentsInput = {
+    create?: XOR<FacultyCreateWithoutStudentsInput, FacultyUncheckedCreateWithoutStudentsInput>
+    connectOrCreate?: FacultyCreateOrConnectWithoutStudentsInput
+    connect?: FacultyWhereUniqueInput
   }
 
   export type AttendanceCreateNestedManyWithoutStudentInput = {
@@ -5068,6 +6433,16 @@ export namespace Prisma {
     delete?: DepartmentWhereInput | boolean
     connect?: DepartmentWhereUniqueInput
     update?: XOR<XOR<DepartmentUpdateToOneWithWhereWithoutStudentsInput, DepartmentUpdateWithoutStudentsInput>, DepartmentUncheckedUpdateWithoutStudentsInput>
+  }
+
+  export type FacultyUpdateOneWithoutStudentsNestedInput = {
+    create?: XOR<FacultyCreateWithoutStudentsInput, FacultyUncheckedCreateWithoutStudentsInput>
+    connectOrCreate?: FacultyCreateOrConnectWithoutStudentsInput
+    upsert?: FacultyUpsertWithoutStudentsInput
+    disconnect?: FacultyWhereInput | boolean
+    delete?: FacultyWhereInput | boolean
+    connect?: FacultyWhereUniqueInput
+    update?: XOR<XOR<FacultyUpdateToOneWithWhereWithoutStudentsInput, FacultyUpdateWithoutStudentsInput>, FacultyUncheckedUpdateWithoutStudentsInput>
   }
 
   export type AttendanceUpdateManyWithoutStudentNestedInput = {
@@ -5316,6 +6691,79 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type StudentCreateWithoutFacultyInput = {
+    rfidTag?: string | null
+    firstName: string
+    lastName: string
+    middleInitial?: string | null
+    birthDate?: Date | string | null
+    address?: string | null
+    guardianName?: string | null
+    year: number
+    photo?: string | null
+    department?: DepartmentCreateNestedOneWithoutStudentsInput
+    attendances?: AttendanceCreateNestedManyWithoutStudentInput
+  }
+
+  export type StudentUncheckedCreateWithoutFacultyInput = {
+    id?: number
+    rfidTag?: string | null
+    firstName: string
+    lastName: string
+    middleInitial?: string | null
+    birthDate?: Date | string | null
+    address?: string | null
+    guardianName?: string | null
+    departmentId?: number | null
+    year: number
+    photo?: string | null
+    attendances?: AttendanceUncheckedCreateNestedManyWithoutStudentInput
+  }
+
+  export type StudentCreateOrConnectWithoutFacultyInput = {
+    where: StudentWhereUniqueInput
+    create: XOR<StudentCreateWithoutFacultyInput, StudentUncheckedCreateWithoutFacultyInput>
+  }
+
+  export type StudentCreateManyFacultyInputEnvelope = {
+    data: StudentCreateManyFacultyInput | StudentCreateManyFacultyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type StudentUpsertWithWhereUniqueWithoutFacultyInput = {
+    where: StudentWhereUniqueInput
+    update: XOR<StudentUpdateWithoutFacultyInput, StudentUncheckedUpdateWithoutFacultyInput>
+    create: XOR<StudentCreateWithoutFacultyInput, StudentUncheckedCreateWithoutFacultyInput>
+  }
+
+  export type StudentUpdateWithWhereUniqueWithoutFacultyInput = {
+    where: StudentWhereUniqueInput
+    data: XOR<StudentUpdateWithoutFacultyInput, StudentUncheckedUpdateWithoutFacultyInput>
+  }
+
+  export type StudentUpdateManyWithWhereWithoutFacultyInput = {
+    where: StudentScalarWhereInput
+    data: XOR<StudentUpdateManyMutationInput, StudentUncheckedUpdateManyWithoutFacultyInput>
+  }
+
+  export type StudentScalarWhereInput = {
+    AND?: StudentScalarWhereInput | StudentScalarWhereInput[]
+    OR?: StudentScalarWhereInput[]
+    NOT?: StudentScalarWhereInput | StudentScalarWhereInput[]
+    id?: IntFilter<"Student"> | number
+    rfidTag?: StringNullableFilter<"Student"> | string | null
+    firstName?: StringFilter<"Student"> | string
+    lastName?: StringFilter<"Student"> | string
+    middleInitial?: StringNullableFilter<"Student"> | string | null
+    birthDate?: DateTimeNullableFilter<"Student"> | Date | string | null
+    address?: StringNullableFilter<"Student"> | string | null
+    guardianName?: StringNullableFilter<"Student"> | string | null
+    departmentId?: IntNullableFilter<"Student"> | number | null
+    year?: IntFilter<"Student"> | number
+    photo?: StringNullableFilter<"Student"> | string | null
+    facultyId?: IntNullableFilter<"Student"> | number | null
+  }
+
   export type StudentCreateWithoutDepartmentInput = {
     rfidTag?: string | null
     firstName: string
@@ -5326,6 +6774,7 @@ export namespace Prisma {
     guardianName?: string | null
     year: number
     photo?: string | null
+    faculty?: FacultyCreateNestedOneWithoutStudentsInput
     attendances?: AttendanceCreateNestedManyWithoutStudentInput
   }
 
@@ -5340,6 +6789,7 @@ export namespace Prisma {
     guardianName?: string | null
     year: number
     photo?: string | null
+    facultyId?: number | null
     attendances?: AttendanceUncheckedCreateNestedManyWithoutStudentInput
   }
 
@@ -5369,23 +6819,6 @@ export namespace Prisma {
     data: XOR<StudentUpdateManyMutationInput, StudentUncheckedUpdateManyWithoutDepartmentInput>
   }
 
-  export type StudentScalarWhereInput = {
-    AND?: StudentScalarWhereInput | StudentScalarWhereInput[]
-    OR?: StudentScalarWhereInput[]
-    NOT?: StudentScalarWhereInput | StudentScalarWhereInput[]
-    id?: IntFilter<"Student"> | number
-    rfidTag?: StringNullableFilter<"Student"> | string | null
-    firstName?: StringFilter<"Student"> | string
-    lastName?: StringFilter<"Student"> | string
-    middleInitial?: StringNullableFilter<"Student"> | string | null
-    birthDate?: DateTimeNullableFilter<"Student"> | Date | string | null
-    address?: StringNullableFilter<"Student"> | string | null
-    guardianName?: StringNullableFilter<"Student"> | string | null
-    departmentId?: IntNullableFilter<"Student"> | number | null
-    year?: IntFilter<"Student"> | number
-    photo?: StringNullableFilter<"Student"> | string | null
-  }
-
   export type DepartmentCreateWithoutStudentsInput = {
     acronym: string
     departmentName: string
@@ -5400,6 +6833,24 @@ export namespace Prisma {
   export type DepartmentCreateOrConnectWithoutStudentsInput = {
     where: DepartmentWhereUniqueInput
     create: XOR<DepartmentCreateWithoutStudentsInput, DepartmentUncheckedCreateWithoutStudentsInput>
+  }
+
+  export type FacultyCreateWithoutStudentsInput = {
+    name: string
+    username: string
+    password: string
+  }
+
+  export type FacultyUncheckedCreateWithoutStudentsInput = {
+    id?: number
+    name: string
+    username: string
+    password: string
+  }
+
+  export type FacultyCreateOrConnectWithoutStudentsInput = {
+    where: FacultyWhereUniqueInput
+    create: XOR<FacultyCreateWithoutStudentsInput, FacultyUncheckedCreateWithoutStudentsInput>
   }
 
   export type AttendanceCreateWithoutStudentInput = {
@@ -5447,6 +6898,30 @@ export namespace Prisma {
     departmentName?: StringFieldUpdateOperationsInput | string
   }
 
+  export type FacultyUpsertWithoutStudentsInput = {
+    update: XOR<FacultyUpdateWithoutStudentsInput, FacultyUncheckedUpdateWithoutStudentsInput>
+    create: XOR<FacultyCreateWithoutStudentsInput, FacultyUncheckedCreateWithoutStudentsInput>
+    where?: FacultyWhereInput
+  }
+
+  export type FacultyUpdateToOneWithWhereWithoutStudentsInput = {
+    where?: FacultyWhereInput
+    data: XOR<FacultyUpdateWithoutStudentsInput, FacultyUncheckedUpdateWithoutStudentsInput>
+  }
+
+  export type FacultyUpdateWithoutStudentsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type FacultyUncheckedUpdateWithoutStudentsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+  }
+
   export type AttendanceUpsertWithWhereUniqueWithoutStudentInput = {
     where: AttendanceWhereUniqueInput
     update: XOR<AttendanceUpdateWithoutStudentInput, AttendanceUncheckedUpdateWithoutStudentInput>
@@ -5485,6 +6960,7 @@ export namespace Prisma {
     year: number
     photo?: string | null
     department?: DepartmentCreateNestedOneWithoutStudentsInput
+    faculty?: FacultyCreateNestedOneWithoutStudentsInput
   }
 
   export type StudentUncheckedCreateWithoutAttendancesInput = {
@@ -5499,6 +6975,7 @@ export namespace Prisma {
     departmentId?: number | null
     year: number
     photo?: string | null
+    facultyId?: number | null
   }
 
   export type StudentCreateOrConnectWithoutAttendancesInput = {
@@ -5528,9 +7005,68 @@ export namespace Prisma {
     year?: IntFieldUpdateOperationsInput | number
     photo?: NullableStringFieldUpdateOperationsInput | string | null
     department?: DepartmentUpdateOneWithoutStudentsNestedInput
+    faculty?: FacultyUpdateOneWithoutStudentsNestedInput
   }
 
   export type StudentUncheckedUpdateWithoutAttendancesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    rfidTag?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    middleInitial?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    guardianName?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentId?: NullableIntFieldUpdateOperationsInput | number | null
+    year?: IntFieldUpdateOperationsInput | number
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    facultyId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type StudentCreateManyFacultyInput = {
+    id?: number
+    rfidTag?: string | null
+    firstName: string
+    lastName: string
+    middleInitial?: string | null
+    birthDate?: Date | string | null
+    address?: string | null
+    guardianName?: string | null
+    departmentId?: number | null
+    year: number
+    photo?: string | null
+  }
+
+  export type StudentUpdateWithoutFacultyInput = {
+    rfidTag?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    middleInitial?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    guardianName?: NullableStringFieldUpdateOperationsInput | string | null
+    year?: IntFieldUpdateOperationsInput | number
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    department?: DepartmentUpdateOneWithoutStudentsNestedInput
+    attendances?: AttendanceUpdateManyWithoutStudentNestedInput
+  }
+
+  export type StudentUncheckedUpdateWithoutFacultyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    rfidTag?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    middleInitial?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    guardianName?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentId?: NullableIntFieldUpdateOperationsInput | number | null
+    year?: IntFieldUpdateOperationsInput | number
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    attendances?: AttendanceUncheckedUpdateManyWithoutStudentNestedInput
+  }
+
+  export type StudentUncheckedUpdateManyWithoutFacultyInput = {
     id?: IntFieldUpdateOperationsInput | number
     rfidTag?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: StringFieldUpdateOperationsInput | string
@@ -5555,6 +7091,7 @@ export namespace Prisma {
     guardianName?: string | null
     year: number
     photo?: string | null
+    facultyId?: number | null
   }
 
   export type StudentUpdateWithoutDepartmentInput = {
@@ -5567,6 +7104,7 @@ export namespace Prisma {
     guardianName?: NullableStringFieldUpdateOperationsInput | string | null
     year?: IntFieldUpdateOperationsInput | number
     photo?: NullableStringFieldUpdateOperationsInput | string | null
+    faculty?: FacultyUpdateOneWithoutStudentsNestedInput
     attendances?: AttendanceUpdateManyWithoutStudentNestedInput
   }
 
@@ -5581,6 +7119,7 @@ export namespace Prisma {
     guardianName?: NullableStringFieldUpdateOperationsInput | string | null
     year?: IntFieldUpdateOperationsInput | number
     photo?: NullableStringFieldUpdateOperationsInput | string | null
+    facultyId?: NullableIntFieldUpdateOperationsInput | number | null
     attendances?: AttendanceUncheckedUpdateManyWithoutStudentNestedInput
   }
 
@@ -5595,6 +7134,7 @@ export namespace Prisma {
     guardianName?: NullableStringFieldUpdateOperationsInput | string | null
     year?: IntFieldUpdateOperationsInput | number
     photo?: NullableStringFieldUpdateOperationsInput | string | null
+    facultyId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type AttendanceCreateManyStudentInput = {

@@ -11,6 +11,13 @@ export interface Student {
   department: string;
   year: number;
   photo: string;
+  facultyId?: number;
+}
+
+export interface Faculty {
+  id: number;
+  name: string;
+  username: string;
 }
 
 export interface AddStudentData {
