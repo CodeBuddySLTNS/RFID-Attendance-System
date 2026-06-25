@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jun 25, 2026 at 04:38 AM
+-- Generation Time: Jun 25, 2026 at 05:25 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -204,17 +204,18 @@ CREATE TABLE `students` (
   `departmentId` int(11) DEFAULT NULL,
   `year` tinyint(4) NOT NULL CHECK (`year` between 1 and 4),
   `photo` varchar(255) DEFAULT NULL,
-  `facultyId` int(11) DEFAULT NULL
+  `facultyId` int(11) DEFAULT NULL,
+  `guardianPhone` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `students`
 --
 
-INSERT INTO `students` (`id`, `rfidTag`, `firstName`, `lastName`, `middleInitial`, `birthDate`, `address`, `guardianName`, `departmentId`, `year`, `photo`, `facultyId`) VALUES
-(1, '0005811274', 'Gina', 'Macaraig', 'M', '2025-10-20', 'Lipakan', 'Mar', 2, 2, '/uploads/9637ecd5-dd65-4401-b02a-3571e5d07966-1761200381599.jpeg', 1),
-(5, '0005812869', 'Jana', 'Kin', 'M', '2025-10-23', 'Lipakan', 'Mel', 2, 1, '/uploads/bc38bc96-2b91-496d-ab45-423e06b5ddd9-1761115406044.jpeg', 1),
-(6, '0005808537', 'Geo', 'Ong', NULL, '2025-10-06', 'Palawan', 'Ong', 2, 4, '/uploads/geo-1761186582483.jpg', 1);
+INSERT INTO `students` (`id`, `rfidTag`, `firstName`, `lastName`, `middleInitial`, `birthDate`, `address`, `guardianName`, `departmentId`, `year`, `photo`, `facultyId`, `guardianPhone`) VALUES
+(1, '0005811274', 'Gina', 'Macaraig', 'M', '2025-10-20', 'Lipakan', 'Mar', 2, 2, '/uploads/9637ecd5-dd65-4401-b02a-3571e5d07966-1761200381599.jpeg', 1, '09164549455'),
+(5, '0005812869', 'Jana', 'Kin', 'M', '2025-10-23', 'Lipakan', 'Mel', 2, 1, '/uploads/bc38bc96-2b91-496d-ab45-423e06b5ddd9-1761115406044.jpeg', 1, NULL),
+(6, '0005808537', 'Geo', 'Ong', NULL, '2025-10-06', 'Palawan', 'Ong', 2, 4, '/uploads/geo-1761186582483.jpg', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -240,6 +241,7 @@ CREATE TABLE `_prisma_migrations` (
 INSERT INTO `_prisma_migrations` (`id`, `checksum`, `finished_at`, `migration_name`, `logs`, `rolled_back_at`, `started_at`, `applied_steps_count`) VALUES
 ('0e23054e-680a-493c-8dc1-0633b68c4b23', '4113ec489c2bb57c6dd754c6b07afbc80373d532f71de0e96fa0c86583bbc82f', '2026-06-25 02:08:16.299', '0_init', '', NULL, '2026-06-25 02:08:16.299', 0),
 ('4d03fe38-ae3e-47bc-ae59-fd5c4ff23329', '07fcbe0d6d4fb38983e305fe74be093be7cad5ccae742127bda23054e25b125c', '2026-06-25 02:08:30.411', '20260625020830_add_announcements', NULL, NULL, '2026-06-25 02:08:30.334', 1),
+('cf0537e8-7132-4f3b-8bf3-0ddd554077c4', '245a460c430fe41a2257e25d4aac612a37dc3219b4c02ef0821874c13c716389', '2026-06-25 03:00:38.511', '20260625030038_add_guardian_phone_to_student', NULL, NULL, '2026-06-25 03:00:38.497', 1),
 ('e0c27159-5d19-4af4-ac65-23a54f6967fa', 'fdb28f522e62ad30f4116f926bf0d1e10caa8cb56e8cbcb02f7999b28ef1b82f', '2026-06-25 02:29:23.620', '20260625022923_replace_title_and_content_with_message', NULL, NULL, '2026-06-25 02:29:23.602', 1);
 
 --
@@ -296,7 +298,7 @@ ALTER TABLE `_prisma_migrations`
 -- AUTO_INCREMENT for table `announcements`
 --
 ALTER TABLE `announcements`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `attendances`
