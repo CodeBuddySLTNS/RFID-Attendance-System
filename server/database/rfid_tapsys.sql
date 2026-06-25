@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jan 12, 2026 at 09:16 AM
+-- Generation Time: Jun 25, 2026 at 04:38 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,13 +24,34 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `announcements`
+--
+
+CREATE TABLE `announcements` (
+  `id` int(11) NOT NULL,
+  `facultyId` int(11) NOT NULL,
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
+  `updatedAt` datetime(3) NOT NULL,
+  `message` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `announcements`
+--
+
+INSERT INTO `announcements` (`id`, `facultyId`, `createdAt`, `updatedAt`, `message`) VALUES
+(1, 1, '2026-06-25 02:33:28.646', '2026-06-25 02:33:28.646', 'WLAY KLASE KARON KAY DI RKO MO MEET!');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `attendances`
 --
 
 CREATE TABLE `attendances` (
   `id` int(11) NOT NULL,
   `studentId` int(11) NOT NULL,
-  `type` enum('IN','OUT') NOT NULL,
+  `type` varchar(3) NOT NULL,
   `timestamp` datetime NOT NULL,
   `date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -112,7 +133,15 @@ INSERT INTO `attendances` (`id`, `studentId`, `type`, `timestamp`, `date`) VALUE
 (246, 1, 'IN', '2025-10-24 19:09:56', '2025-10-24'),
 (247, 6, 'OUT', '2025-10-24 19:10:02', '2025-10-24'),
 (248, 5, 'IN', '2025-10-24 19:10:07', '2025-10-24'),
-(249, 5, 'IN', '2026-01-12 16:03:48', '2026-01-12');
+(249, 5, 'IN', '2026-01-12 16:03:48', '2026-01-12'),
+(250, 1, 'IN', '2026-06-14 10:13:55', '2026-06-14'),
+(251, 1, 'OUT', '2026-06-14 10:14:58', '2026-06-14'),
+(252, 1, 'IN', '2026-06-14 10:16:41', '2026-06-14'),
+(253, 1, 'OUT', '2026-06-14 10:18:24', '2026-06-14'),
+(254, 1, 'IN', '2026-06-14 10:19:48', '2026-06-14'),
+(255, 5, 'IN', '2026-06-25 01:52:47', '2026-06-25'),
+(256, 1, 'IN', '2026-06-25 01:52:52', '2026-06-25'),
+(257, 1, 'OUT', '2026-06-25 02:37:48', '2026-06-25');
 
 -- --------------------------------------------------------
 
@@ -139,6 +168,27 @@ INSERT INTO `departments` (`departmentId`, `acronym`, `departmentName`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `faculties`
+--
+
+CREATE TABLE `faculties` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `username` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `faculties`
+--
+
+INSERT INTO `faculties` (`id`, `name`, `password`, `username`) VALUES
+(1, 'admin', '$2b$10$1AlqJAf9WZz9u1/pDTQ55.p9AMeMG4.q82P4666LfQsQ1MVtfJmlG', 'admin'),
+(2, 'add', '$2b$10$/vcd6Rt8DYjFTNBhBJg6aukr7aNVLf.pyTl20Ao3iHlbJMcajltZm', 'add');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `students`
 --
 
@@ -153,28 +203,62 @@ CREATE TABLE `students` (
   `guardianName` varchar(100) DEFAULT NULL,
   `departmentId` int(11) DEFAULT NULL,
   `year` tinyint(4) NOT NULL CHECK (`year` between 1 and 4),
-  `photo` varchar(255) DEFAULT NULL
+  `photo` varchar(255) DEFAULT NULL,
+  `facultyId` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `students`
 --
 
-INSERT INTO `students` (`id`, `rfidTag`, `firstName`, `lastName`, `middleInitial`, `birthDate`, `address`, `guardianName`, `departmentId`, `year`, `photo`) VALUES
-(1, '0005811274', 'Gina', 'Macaraig', 'M', '2025-10-20', 'Lipakan', 'Mar', 2, 2, '/uploads/9637ecd5-dd65-4401-b02a-3571e5d07966-1761200381599.jpeg'),
-(5, '0005812869', 'Jana', 'Kin', 'M', '2025-10-23', 'Lipakan', 'Mel', 2, 1, '/uploads/bc38bc96-2b91-496d-ab45-423e06b5ddd9-1761115406044.jpeg'),
-(6, '0005808537', 'Geo', 'Ong', NULL, '2025-10-06', 'Palawan', 'Ong', 2, 4, '/uploads/geo-1761186582483.jpg');
+INSERT INTO `students` (`id`, `rfidTag`, `firstName`, `lastName`, `middleInitial`, `birthDate`, `address`, `guardianName`, `departmentId`, `year`, `photo`, `facultyId`) VALUES
+(1, '0005811274', 'Gina', 'Macaraig', 'M', '2025-10-20', 'Lipakan', 'Mar', 2, 2, '/uploads/9637ecd5-dd65-4401-b02a-3571e5d07966-1761200381599.jpeg', 1),
+(5, '0005812869', 'Jana', 'Kin', 'M', '2025-10-23', 'Lipakan', 'Mel', 2, 1, '/uploads/bc38bc96-2b91-496d-ab45-423e06b5ddd9-1761115406044.jpeg', 1),
+(6, '0005808537', 'Geo', 'Ong', NULL, '2025-10-06', 'Palawan', 'Ong', 2, 4, '/uploads/geo-1761186582483.jpg', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `_prisma_migrations`
+--
+
+CREATE TABLE `_prisma_migrations` (
+  `id` varchar(36) NOT NULL,
+  `checksum` varchar(64) NOT NULL,
+  `finished_at` datetime(3) DEFAULT NULL,
+  `migration_name` varchar(255) NOT NULL,
+  `logs` text DEFAULT NULL,
+  `rolled_back_at` datetime(3) DEFAULT NULL,
+  `started_at` datetime(3) NOT NULL DEFAULT current_timestamp(3),
+  `applied_steps_count` int(10) UNSIGNED NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `_prisma_migrations`
+--
+
+INSERT INTO `_prisma_migrations` (`id`, `checksum`, `finished_at`, `migration_name`, `logs`, `rolled_back_at`, `started_at`, `applied_steps_count`) VALUES
+('0e23054e-680a-493c-8dc1-0633b68c4b23', '4113ec489c2bb57c6dd754c6b07afbc80373d532f71de0e96fa0c86583bbc82f', '2026-06-25 02:08:16.299', '0_init', '', NULL, '2026-06-25 02:08:16.299', 0),
+('4d03fe38-ae3e-47bc-ae59-fd5c4ff23329', '07fcbe0d6d4fb38983e305fe74be093be7cad5ccae742127bda23054e25b125c', '2026-06-25 02:08:30.411', '20260625020830_add_announcements', NULL, NULL, '2026-06-25 02:08:30.334', 1),
+('e0c27159-5d19-4af4-ac65-23a54f6967fa', 'fdb28f522e62ad30f4116f926bf0d1e10caa8cb56e8cbcb02f7999b28ef1b82f', '2026-06-25 02:29:23.620', '20260625022923_replace_title_and_content_with_message', NULL, NULL, '2026-06-25 02:29:23.602', 1);
 
 --
 -- Indexes for dumped tables
 --
 
 --
+-- Indexes for table `announcements`
+--
+ALTER TABLE `announcements`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `announcements_facultyId_fkey` (`facultyId`);
+
+--
 -- Indexes for table `attendances`
 --
 ALTER TABLE `attendances`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `studentId` (`studentId`);
+  ADD KEY `attendances_studentId_fkey` (`studentId`);
 
 --
 -- Indexes for table `departments`
@@ -183,28 +267,54 @@ ALTER TABLE `departments`
   ADD PRIMARY KEY (`departmentId`);
 
 --
+-- Indexes for table `faculties`
+--
+ALTER TABLE `faculties`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `faculties_username_key` (`username`);
+
+--
 -- Indexes for table `students`
 --
 ALTER TABLE `students`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `rfidTag` (`rfidTag`),
-  ADD KEY `departmentId` (`departmentId`);
+  ADD UNIQUE KEY `students_rfidTag_key` (`rfidTag`),
+  ADD KEY `students_departmentId_fkey` (`departmentId`),
+  ADD KEY `students_facultyId_fkey` (`facultyId`);
+
+--
+-- Indexes for table `_prisma_migrations`
+--
+ALTER TABLE `_prisma_migrations`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
+-- AUTO_INCREMENT for table `announcements`
+--
+ALTER TABLE `announcements`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `attendances`
 --
 ALTER TABLE `attendances`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=250;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=258;
 
 --
 -- AUTO_INCREMENT for table `departments`
 --
 ALTER TABLE `departments`
   MODIFY `departmentId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `faculties`
+--
+ALTER TABLE `faculties`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `students`
@@ -217,16 +327,23 @@ ALTER TABLE `students`
 --
 
 --
+-- Constraints for table `announcements`
+--
+ALTER TABLE `announcements`
+  ADD CONSTRAINT `announcements_facultyId_fkey` FOREIGN KEY (`facultyId`) REFERENCES `faculties` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `attendances`
 --
 ALTER TABLE `attendances`
-  ADD CONSTRAINT `attendances_ibfk_1` FOREIGN KEY (`studentId`) REFERENCES `students` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `attendances_studentId_fkey` FOREIGN KEY (`studentId`) REFERENCES `students` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `students`
 --
 ALTER TABLE `students`
-  ADD CONSTRAINT `students_ibfk_1` FOREIGN KEY (`departmentId`) REFERENCES `departments` (`departmentId`) ON DELETE SET NULL;
+  ADD CONSTRAINT `students_departmentId_fkey` FOREIGN KEY (`departmentId`) REFERENCES `departments` (`departmentId`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `students_facultyId_fkey` FOREIGN KEY (`facultyId`) REFERENCES `faculties` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
