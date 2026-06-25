@@ -7,6 +7,7 @@ export interface Student {
   birthDate: string;
   address: string;
   guardianName: string;
+  guardianPhone: string;
   departmentId: number;
   department: string;
   year: number;
@@ -28,6 +29,7 @@ export interface AddStudentData {
   birthDate: string;
   address: string;
   guardianName: string;
+  guardianPhone: string;
   departmentId: number;
   year: number;
   photo?: string;

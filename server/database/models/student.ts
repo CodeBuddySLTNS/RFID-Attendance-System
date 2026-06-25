@@ -49,6 +49,7 @@ export const Student = {
     birthDate: string;
     address: string;
     guardianName: string;
+    guardianPhone: string;
     departmentId: number | string;
     year: number | string;
     photo?: string;
@@ -63,6 +64,7 @@ export const Student = {
         birthDate: new Date(data.birthDate),
         address: data.address,
         guardianName: data.guardianName,
+        guardianPhone: data.guardianPhone || null,
         departmentId: Number(data.departmentId),
         year: Number(data.year),
         photo: data.photo || null,

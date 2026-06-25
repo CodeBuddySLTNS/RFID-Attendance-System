@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Attendance } from "../database/models/attendance.js";
 import { Student } from "../database/models/student.js";
-import { CustomError } from "../lib/utils.js";
+import { CustomError, sendSMS } from "../lib/utils.js";
 
 const getAttendances = async (req: Request, res: Response) => {
   const { date, count } = req.query;
@@ -49,6 +49,19 @@ const addAttendance = async (req: Request, res: Response) => {
   }
 
   const result = await Attendance.add(student.id, type, timestamp, date);
+
+  // send sms notification to guardian asynchronously
+  // if (student.guardianPhone) {
+  //   const tapDate = new Date(date).toLocaleDateString([], { month: "short", day: "numeric", year: "numeric" });
+  //   const tapTime = new Date(timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  //   sendSMS({
+  //     toNumber: student.guardianPhone,
+  //     messageBody: `Attendance Alert: ${student.firstName} ${student.lastName} has successfully checked ${type === "IN" ? "in" : "out"} on ${tapDate} at ${tapTime}.`,
+  //   }).catch((err) => {
+  //     console.error("failed to send sms:", err);
+  //   });
+  // }
+
   res.json({
     message: "Attendance added",
     id: result.insertId,

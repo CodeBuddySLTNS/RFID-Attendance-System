@@ -76,7 +76,10 @@ export const studentColumns: (
     accessorKey: "guardianName",
     header: () => <div className="text-center">Parent/Guardian</div>,
     cell: ({ row }) => (
-      <div className="text-center">{row.getValue("guardianName")}</div>
+      <div className="text-center">
+        {row.getValue("guardianName")}
+        {row.original.guardianPhone ? ` (${row.original.guardianPhone})` : ""}
+      </div>
     ),
   },
   {

@@ -59,10 +59,15 @@ export const ManageStudents = () => {
 
   return (
     <div>
-      <div className="px-6 flex items-center justify-between mt-4">
-        <h2 className="font-bold text-xl border-l-5 border-orange-500 pl-2">
-          Manage Students
-        </h2>
+      <div className="px-6 flex flex-col md:flex-row md:items-center justify-between gap-4 mt-4">
+        <div className="border-l-8 border-orange-500 pl-3">
+          <h2 className="font-bold text-2xl text-slate-800">
+            Manage Students
+          </h2>
+          <p className="text-slate-500 text-sm mt-1">
+            View, add, edit, and delete student records under your faculty account
+          </p>
+        </div>
 
         <div>
           <Link to="/manage-students/new">

@@ -150,6 +150,7 @@ exports.Prisma.StudentScalarFieldEnum = {
   birthDate: 'birthDate',
   address: 'address',
   guardianName: 'guardianName',
+  guardianPhone: 'guardianPhone',
   departmentId: 'departmentId',
   year: 'year',
   photo: 'photo',
@@ -196,6 +197,7 @@ exports.Prisma.StudentOrderByRelevanceFieldEnum = {
   middleInitial: 'middleInitial',
   address: 'address',
   guardianName: 'guardianName',
+  guardianPhone: 'guardianPhone',
   photo: 'photo'
 };
 

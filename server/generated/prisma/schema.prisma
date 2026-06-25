@@ -47,6 +47,7 @@ model Student {
   birthDate     DateTime?    @db.Date
   address       String?      @db.VarChar(255)
   guardianName  String?      @db.VarChar(100)
+  guardianPhone String?      @db.VarChar(20)
   departmentId  Int?
   year          Int          @db.TinyInt
   photo         String?      @db.VarChar(255)

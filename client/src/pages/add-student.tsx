@@ -22,6 +22,7 @@ import type { AddStudentData, Department } from "@/types/data.types";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Card,
   CardDescription,
@@ -32,6 +33,7 @@ import { toast } from "sonner";
 import { isAxiosError } from "axios";
 
 export const AddStudent = () => {
+  const navigate = useNavigate();
   const { data: departments } = useQuery<Department[]>({
     queryKey: ["departments"],
     queryFn: coleAPI("/departments"),
@@ -55,6 +57,7 @@ export const AddStudent = () => {
       birthDate: "",
       address: "",
       guardianName: "",
+      guardianPhone: "",
       departmentId: undefined,
       year: 1,
       photo: undefined,
@@ -89,7 +92,8 @@ export const AddStudent = () => {
       form.append("lastName", data.lastName.trim());
       form.append("birthDate", data.birthDate);
       form.append("address", data.address.trim());
-      form.append("guardianName", data.guardianName);
+      form.append("guardianName", data.guardianName.trim());
+      form.append("guardianPhone", data.guardianPhone.trim());
       form.append("departmentId", String(data.departmentId));
       form.append("year", String(data.year));
       if (photoFile) form.append("photo", photoFile);
@@ -187,7 +191,7 @@ export const AddStudent = () => {
               </Field>
             </FieldGroup>
 
-            <FieldGroup className="w-full grid grid-cols-3">
+            <FieldGroup className="w-full grid grid-cols-4">
               <Field className="gap-0.5">
                 <FieldLabel>
                   <FieldTitle>Birth date</FieldTitle>
@@ -251,6 +255,28 @@ export const AddStudent = () => {
                   />
                 </FieldContent>
               </Field>
+
+              <Field className="gap-0.5">
+                <FieldLabel>
+                  <FieldTitle>Guardian phone</FieldTitle>
+                </FieldLabel>
+                <FieldContent>
+                  <input
+                    type="tel"
+                    className="rounded-md border px-3 py-2"
+                    {...register("guardianPhone", {
+                      required: "Guardian phone is required",
+                    })}
+                  />
+                  <FieldError
+                    errors={[
+                      errors.guardianPhone
+                        ? { message: errors.guardianPhone.message }
+                        : undefined,
+                    ]}
+                  />
+                </FieldContent>
+              </Field>
             </FieldGroup>
 
             <FieldGroup className="w-full grid grid-cols-[2fr_1fr]">
@@ -268,8 +294,8 @@ export const AddStudent = () => {
                         "departmentId",
                         parseInt(
                           v,
-                          10
-                        ) as unknown as AddStudentData["departmentId"]
+                          10,
+                        ) as unknown as AddStudentData["departmentId"],
                       )
                     }
                   >
@@ -356,6 +382,13 @@ export const AddStudent = () => {
               </Button>
               <Button variant="outline" type="button" onClick={() => reset()}>
                 Reset
+              </Button>
+              <Button
+                variant="ghost"
+                type="button"
+                onClick={() => navigate("/manage-students")}
+              >
+                Cancel
               </Button>
             </div>
           </FieldSet>

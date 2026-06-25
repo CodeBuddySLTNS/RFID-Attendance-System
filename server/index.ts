@@ -21,6 +21,7 @@ app.use(
   }),
 );
 app.use(express.json());
+app.use(express.static(path.join(process.cwd(), "..", "client", "dist")));
 app.use("/api/uploads", express.static(path.join(process.cwd(), "uploads")));
 app.use((req, res, next) => {
   console.log(req.method, req.url);
@@ -33,6 +34,12 @@ app.use("/api/departments", departmentRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/attendances", attendanceRoutes);
 app.use("/api/announcements", announcementRoutes);
+
+// for production frontend build
+// build client first
+app.get("/*index", (req, res) => {
+  res.sendFile(path.join(process.cwd(), "..", "client", "dist", "index.html"));
+});
 
 app.use(errorHandler);
 

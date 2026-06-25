@@ -4281,6 +4281,7 @@ export namespace Prisma {
     birthDate: Date | null
     address: string | null
     guardianName: string | null
+    guardianPhone: string | null
     departmentId: number | null
     year: number | null
     photo: string | null
@@ -4296,6 +4297,7 @@ export namespace Prisma {
     birthDate: Date | null
     address: string | null
     guardianName: string | null
+    guardianPhone: string | null
     departmentId: number | null
     year: number | null
     photo: string | null
@@ -4311,6 +4313,7 @@ export namespace Prisma {
     birthDate: number
     address: number
     guardianName: number
+    guardianPhone: number
     departmentId: number
     year: number
     photo: number
@@ -4342,6 +4345,7 @@ export namespace Prisma {
     birthDate?: true
     address?: true
     guardianName?: true
+    guardianPhone?: true
     departmentId?: true
     year?: true
     photo?: true
@@ -4357,6 +4361,7 @@ export namespace Prisma {
     birthDate?: true
     address?: true
     guardianName?: true
+    guardianPhone?: true
     departmentId?: true
     year?: true
     photo?: true
@@ -4372,6 +4377,7 @@ export namespace Prisma {
     birthDate?: true
     address?: true
     guardianName?: true
+    guardianPhone?: true
     departmentId?: true
     year?: true
     photo?: true
@@ -4474,6 +4480,7 @@ export namespace Prisma {
     birthDate: Date | null
     address: string | null
     guardianName: string | null
+    guardianPhone: string | null
     departmentId: number | null
     year: number
     photo: string | null
@@ -4508,6 +4515,7 @@ export namespace Prisma {
     birthDate?: boolean
     address?: boolean
     guardianName?: boolean
+    guardianPhone?: boolean
     departmentId?: boolean
     year?: boolean
     photo?: boolean
@@ -4529,13 +4537,14 @@ export namespace Prisma {
     birthDate?: boolean
     address?: boolean
     guardianName?: boolean
+    guardianPhone?: boolean
     departmentId?: boolean
     year?: boolean
     photo?: boolean
     facultyId?: boolean
   }
 
-  export type StudentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rfidTag" | "firstName" | "lastName" | "middleInitial" | "birthDate" | "address" | "guardianName" | "departmentId" | "year" | "photo" | "facultyId", ExtArgs["result"]["student"]>
+  export type StudentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rfidTag" | "firstName" | "lastName" | "middleInitial" | "birthDate" | "address" | "guardianName" | "guardianPhone" | "departmentId" | "year" | "photo" | "facultyId", ExtArgs["result"]["student"]>
   export type StudentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     department?: boolean | Student$departmentArgs<ExtArgs>
     faculty?: boolean | Student$facultyArgs<ExtArgs>
@@ -4559,6 +4568,7 @@ export namespace Prisma {
       birthDate: Date | null
       address: string | null
       guardianName: string | null
+      guardianPhone: string | null
       departmentId: number | null
       year: number
       photo: string | null
@@ -4943,6 +4953,7 @@ export namespace Prisma {
     readonly birthDate: FieldRef<"Student", 'DateTime'>
     readonly address: FieldRef<"Student", 'String'>
     readonly guardianName: FieldRef<"Student", 'String'>
+    readonly guardianPhone: FieldRef<"Student", 'String'>
     readonly departmentId: FieldRef<"Student", 'Int'>
     readonly year: FieldRef<"Student", 'Int'>
     readonly photo: FieldRef<"Student", 'String'>
@@ -6400,6 +6411,7 @@ export namespace Prisma {
     birthDate: 'birthDate',
     address: 'address',
     guardianName: 'guardianName',
+    guardianPhone: 'guardianPhone',
     departmentId: 'departmentId',
     year: 'year',
     photo: 'photo',
@@ -6467,6 +6479,7 @@ export namespace Prisma {
     middleInitial: 'middleInitial',
     address: 'address',
     guardianName: 'guardianName',
+    guardianPhone: 'guardianPhone',
     photo: 'photo'
   };
 
@@ -6690,6 +6703,7 @@ export namespace Prisma {
     birthDate?: DateTimeNullableFilter<"Student"> | Date | string | null
     address?: StringNullableFilter<"Student"> | string | null
     guardianName?: StringNullableFilter<"Student"> | string | null
+    guardianPhone?: StringNullableFilter<"Student"> | string | null
     departmentId?: IntNullableFilter<"Student"> | number | null
     year?: IntFilter<"Student"> | number
     photo?: StringNullableFilter<"Student"> | string | null
@@ -6708,6 +6722,7 @@ export namespace Prisma {
     birthDate?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     guardianName?: SortOrderInput | SortOrder
+    guardianPhone?: SortOrderInput | SortOrder
     departmentId?: SortOrderInput | SortOrder
     year?: SortOrder
     photo?: SortOrderInput | SortOrder
@@ -6730,6 +6745,7 @@ export namespace Prisma {
     birthDate?: DateTimeNullableFilter<"Student"> | Date | string | null
     address?: StringNullableFilter<"Student"> | string | null
     guardianName?: StringNullableFilter<"Student"> | string | null
+    guardianPhone?: StringNullableFilter<"Student"> | string | null
     departmentId?: IntNullableFilter<"Student"> | number | null
     year?: IntFilter<"Student"> | number
     photo?: StringNullableFilter<"Student"> | string | null
@@ -6748,6 +6764,7 @@ export namespace Prisma {
     birthDate?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     guardianName?: SortOrderInput | SortOrder
+    guardianPhone?: SortOrderInput | SortOrder
     departmentId?: SortOrderInput | SortOrder
     year?: SortOrder
     photo?: SortOrderInput | SortOrder
@@ -6771,6 +6788,7 @@ export namespace Prisma {
     birthDate?: DateTimeNullableWithAggregatesFilter<"Student"> | Date | string | null
     address?: StringNullableWithAggregatesFilter<"Student"> | string | null
     guardianName?: StringNullableWithAggregatesFilter<"Student"> | string | null
+    guardianPhone?: StringNullableWithAggregatesFilter<"Student"> | string | null
     departmentId?: IntNullableWithAggregatesFilter<"Student"> | number | null
     year?: IntWithAggregatesFilter<"Student"> | number
     photo?: StringNullableWithAggregatesFilter<"Student"> | string | null
@@ -6992,6 +7010,7 @@ export namespace Prisma {
     birthDate?: Date | string | null
     address?: string | null
     guardianName?: string | null
+    guardianPhone?: string | null
     year: number
     photo?: string | null
     department?: DepartmentCreateNestedOneWithoutStudentsInput
@@ -7008,6 +7027,7 @@ export namespace Prisma {
     birthDate?: Date | string | null
     address?: string | null
     guardianName?: string | null
+    guardianPhone?: string | null
     departmentId?: number | null
     year: number
     photo?: string | null
@@ -7023,6 +7043,7 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     guardianName?: NullableStringFieldUpdateOperationsInput | string | null
+    guardianPhone?: NullableStringFieldUpdateOperationsInput | string | null
     year?: IntFieldUpdateOperationsInput | number
     photo?: NullableStringFieldUpdateOperationsInput | string | null
     department?: DepartmentUpdateOneWithoutStudentsNestedInput
@@ -7039,6 +7060,7 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     guardianName?: NullableStringFieldUpdateOperationsInput | string | null
+    guardianPhone?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: NullableIntFieldUpdateOperationsInput | number | null
     year?: IntFieldUpdateOperationsInput | number
     photo?: NullableStringFieldUpdateOperationsInput | string | null
@@ -7055,6 +7077,7 @@ export namespace Prisma {
     birthDate?: Date | string | null
     address?: string | null
     guardianName?: string | null
+    guardianPhone?: string | null
     departmentId?: number | null
     year: number
     photo?: string | null
@@ -7069,6 +7092,7 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     guardianName?: NullableStringFieldUpdateOperationsInput | string | null
+    guardianPhone?: NullableStringFieldUpdateOperationsInput | string | null
     year?: IntFieldUpdateOperationsInput | number
     photo?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -7082,6 +7106,7 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     guardianName?: NullableStringFieldUpdateOperationsInput | string | null
+    guardianPhone?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: NullableIntFieldUpdateOperationsInput | number | null
     year?: IntFieldUpdateOperationsInput | number
     photo?: NullableStringFieldUpdateOperationsInput | string | null
@@ -7434,6 +7459,7 @@ export namespace Prisma {
     birthDate?: SortOrder
     address?: SortOrder
     guardianName?: SortOrder
+    guardianPhone?: SortOrder
     departmentId?: SortOrder
     year?: SortOrder
     photo?: SortOrder
@@ -7456,6 +7482,7 @@ export namespace Prisma {
     birthDate?: SortOrder
     address?: SortOrder
     guardianName?: SortOrder
+    guardianPhone?: SortOrder
     departmentId?: SortOrder
     year?: SortOrder
     photo?: SortOrder
@@ -7471,6 +7498,7 @@ export namespace Prisma {
     birthDate?: SortOrder
     address?: SortOrder
     guardianName?: SortOrder
+    guardianPhone?: SortOrder
     departmentId?: SortOrder
     year?: SortOrder
     photo?: SortOrder
@@ -8037,6 +8065,7 @@ export namespace Prisma {
     birthDate?: Date | string | null
     address?: string | null
     guardianName?: string | null
+    guardianPhone?: string | null
     year: number
     photo?: string | null
     department?: DepartmentCreateNestedOneWithoutStudentsInput
@@ -8052,6 +8081,7 @@ export namespace Prisma {
     birthDate?: Date | string | null
     address?: string | null
     guardianName?: string | null
+    guardianPhone?: string | null
     departmentId?: number | null
     year: number
     photo?: string | null
@@ -8119,6 +8149,7 @@ export namespace Prisma {
     birthDate?: DateTimeNullableFilter<"Student"> | Date | string | null
     address?: StringNullableFilter<"Student"> | string | null
     guardianName?: StringNullableFilter<"Student"> | string | null
+    guardianPhone?: StringNullableFilter<"Student"> | string | null
     departmentId?: IntNullableFilter<"Student"> | number | null
     year?: IntFilter<"Student"> | number
     photo?: StringNullableFilter<"Student"> | string | null
@@ -8206,6 +8237,7 @@ export namespace Prisma {
     birthDate?: Date | string | null
     address?: string | null
     guardianName?: string | null
+    guardianPhone?: string | null
     year: number
     photo?: string | null
     faculty?: FacultyCreateNestedOneWithoutStudentsInput
@@ -8221,6 +8253,7 @@ export namespace Prisma {
     birthDate?: Date | string | null
     address?: string | null
     guardianName?: string | null
+    guardianPhone?: string | null
     year: number
     photo?: string | null
     facultyId?: number | null
@@ -8395,6 +8428,7 @@ export namespace Prisma {
     birthDate?: Date | string | null
     address?: string | null
     guardianName?: string | null
+    guardianPhone?: string | null
     year: number
     photo?: string | null
     department?: DepartmentCreateNestedOneWithoutStudentsInput
@@ -8410,6 +8444,7 @@ export namespace Prisma {
     birthDate?: Date | string | null
     address?: string | null
     guardianName?: string | null
+    guardianPhone?: string | null
     departmentId?: number | null
     year: number
     photo?: string | null
@@ -8440,6 +8475,7 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     guardianName?: NullableStringFieldUpdateOperationsInput | string | null
+    guardianPhone?: NullableStringFieldUpdateOperationsInput | string | null
     year?: IntFieldUpdateOperationsInput | number
     photo?: NullableStringFieldUpdateOperationsInput | string | null
     department?: DepartmentUpdateOneWithoutStudentsNestedInput
@@ -8455,6 +8491,7 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     guardianName?: NullableStringFieldUpdateOperationsInput | string | null
+    guardianPhone?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: NullableIntFieldUpdateOperationsInput | number | null
     year?: IntFieldUpdateOperationsInput | number
     photo?: NullableStringFieldUpdateOperationsInput | string | null
@@ -8470,6 +8507,7 @@ export namespace Prisma {
     birthDate?: Date | string | null
     address?: string | null
     guardianName?: string | null
+    guardianPhone?: string | null
     departmentId?: number | null
     year: number
     photo?: string | null
@@ -8490,6 +8528,7 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     guardianName?: NullableStringFieldUpdateOperationsInput | string | null
+    guardianPhone?: NullableStringFieldUpdateOperationsInput | string | null
     year?: IntFieldUpdateOperationsInput | number
     photo?: NullableStringFieldUpdateOperationsInput | string | null
     department?: DepartmentUpdateOneWithoutStudentsNestedInput
@@ -8505,6 +8544,7 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     guardianName?: NullableStringFieldUpdateOperationsInput | string | null
+    guardianPhone?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: NullableIntFieldUpdateOperationsInput | number | null
     year?: IntFieldUpdateOperationsInput | number
     photo?: NullableStringFieldUpdateOperationsInput | string | null
@@ -8520,6 +8560,7 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     guardianName?: NullableStringFieldUpdateOperationsInput | string | null
+    guardianPhone?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: NullableIntFieldUpdateOperationsInput | number | null
     year?: IntFieldUpdateOperationsInput | number
     photo?: NullableStringFieldUpdateOperationsInput | string | null
@@ -8554,6 +8595,7 @@ export namespace Prisma {
     birthDate?: Date | string | null
     address?: string | null
     guardianName?: string | null
+    guardianPhone?: string | null
     year: number
     photo?: string | null
     facultyId?: number | null
@@ -8567,6 +8609,7 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     guardianName?: NullableStringFieldUpdateOperationsInput | string | null
+    guardianPhone?: NullableStringFieldUpdateOperationsInput | string | null
     year?: IntFieldUpdateOperationsInput | number
     photo?: NullableStringFieldUpdateOperationsInput | string | null
     faculty?: FacultyUpdateOneWithoutStudentsNestedInput
@@ -8582,6 +8625,7 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     guardianName?: NullableStringFieldUpdateOperationsInput | string | null
+    guardianPhone?: NullableStringFieldUpdateOperationsInput | string | null
     year?: IntFieldUpdateOperationsInput | number
     photo?: NullableStringFieldUpdateOperationsInput | string | null
     facultyId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -8597,6 +8641,7 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     guardianName?: NullableStringFieldUpdateOperationsInput | string | null
+    guardianPhone?: NullableStringFieldUpdateOperationsInput | string | null
     year?: IntFieldUpdateOperationsInput | number
     photo?: NullableStringFieldUpdateOperationsInput | string | null
     facultyId?: NullableIntFieldUpdateOperationsInput | number | null

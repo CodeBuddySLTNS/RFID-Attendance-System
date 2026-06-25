@@ -16,6 +16,7 @@ const addStudent = async (req: Request, res: Response) => {
     birthDate,
     address,
     guardianName,
+    guardianPhone,
     departmentId,
     year,
   } = req.body;
@@ -34,6 +35,7 @@ const addStudent = async (req: Request, res: Response) => {
     !birthDate ||
     !address ||
     !guardianName ||
+    !guardianPhone ||
     !departmentId ||
     !year
   ) {
@@ -75,6 +77,7 @@ const updateStudent = async (req: Request, res: Response) => {
     "birthDate",
     "address",
     "guardianName",
+    "guardianPhone",
     "departmentId",
     "year",
     "photo",

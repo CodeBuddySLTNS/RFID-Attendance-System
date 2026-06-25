@@ -56,6 +56,7 @@ export const EditStudent = () => {
       birthDate: "",
       address: "",
       guardianName: "",
+      guardianPhone: "",
       departmentId: undefined,
       year: 1,
       photo: undefined,
@@ -75,6 +76,7 @@ export const EditStudent = () => {
       );
       setValue("address", student.address);
       setValue("guardianName", student.guardianName);
+      setValue("guardianPhone", student.guardianPhone);
       setValue("departmentId", student.departmentId as unknown as number);
       setValue("year", student.year as unknown as number);
     }
@@ -106,7 +108,8 @@ export const EditStudent = () => {
       if (data.lastName) form.append("lastName", data.lastName.trim());
       if (data.birthDate) form.append("birthDate", data.birthDate);
       if (data.address) form.append("address", data.address.trim());
-      if (data.guardianName) form.append("guardianName", data.guardianName);
+      if (data.guardianName) form.append("guardianName", data.guardianName.trim());
+      if (data.guardianPhone) form.append("guardianPhone", data.guardianPhone.trim());
       if (data.departmentId)
         form.append("departmentId", String(data.departmentId));
       if (data.year) form.append("year", String(data.year));
@@ -210,7 +213,7 @@ export const EditStudent = () => {
               </Field>
             </FieldGroup>
 
-            <FieldGroup className="w-full grid grid-cols-3">
+            <FieldGroup className="w-full grid grid-cols-4">
               <Field className="gap-0.5">
                 <FieldLabel>
                   <FieldTitle>Birth date</FieldTitle>
@@ -269,6 +272,27 @@ export const EditStudent = () => {
                     errors={
                       errors.guardianName
                         ? [{ message: errors.guardianName.message }]
+                        : undefined
+                    }
+                  />
+                </FieldContent>
+              </Field>
+
+              <Field className="gap-0.5">
+                <FieldLabel>
+                  <FieldTitle>Guardian phone</FieldTitle>
+                </FieldLabel>
+                <FieldContent>
+                  <input
+                    className="rounded-md border px-3 py-2"
+                    {...register("guardianPhone", {
+                      required: "Guardian phone is required",
+                    })}
+                  />
+                  <FieldError
+                    errors={
+                      errors.guardianPhone
+                        ? [{ message: errors.guardianPhone.message }]
                         : undefined
                     }
                   />
