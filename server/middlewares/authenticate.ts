@@ -12,6 +12,7 @@ const authenticate = async (req: Request, res: Response, next: NextFunction) => 
       "/api/auth/login",
       "/api/auth/signup",
       "/api/auth/refresh",
+      "/api/announcements/public",
     ];
 
     if (

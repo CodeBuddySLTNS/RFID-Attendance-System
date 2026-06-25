@@ -36,7 +36,11 @@ export const Login = () => {
 
   const { mutateAsync: login, isPending } = useMutation({
     mutationFn: coleAPI("/auth/login", "POST"),
-    onSuccess: (data: { token: string; refreshToken: string; faculty: { id: number; name: string; username: string } }) => {
+    onSuccess: (data: {
+      token: string;
+      refreshToken: string;
+      faculty: { id: number; name: string; username: string };
+    }) => {
       localStorage.setItem("token", data.token);
       localStorage.setItem("refreshToken", data.refreshToken);
       localStorage.setItem("faculty", JSON.stringify(data.faculty));
@@ -61,7 +65,7 @@ export const Login = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-full bg-slate-50 px-4">
+    <div className="flex justify-center py-5 items-center h-full bg-slate-50 px-4">
       <Card className="w-full max-w-md shadow-lg border border-slate-100 bg-white">
         <CardHeader className="text-center pb-2">
           <CardTitle className="text-2xl font-bold tracking-tight text-slate-900">
@@ -76,7 +80,9 @@ export const Login = () => {
             <FieldGroup className="flex flex-col gap-4">
               <Field className="gap-1">
                 <FieldLabel>
-                  <FieldTitle className="text-slate-700 text-sm font-semibold">Username</FieldTitle>
+                  <FieldTitle className="text-slate-700 text-sm font-semibold">
+                    Username
+                  </FieldTitle>
                 </FieldLabel>
                 <FieldContent>
                   <input
@@ -99,7 +105,9 @@ export const Login = () => {
 
               <Field className="gap-1">
                 <FieldLabel>
-                  <FieldTitle className="text-slate-700 text-sm font-semibold">Password</FieldTitle>
+                  <FieldTitle className="text-slate-700 text-sm font-semibold">
+                    Password
+                  </FieldTitle>
                 </FieldLabel>
                 <FieldContent>
                   <input
@@ -127,7 +135,10 @@ export const Login = () => {
 
             <div className="text-center text-sm text-slate-600 mt-4">
               Don't have an account?{" "}
-              <Link to="/signup" className="text-primary hover:underline font-semibold">
+              <Link
+                to="/signup"
+                className="text-primary hover:underline font-semibold"
+              >
                 Sign up here
               </Link>
             </div>

@@ -127,6 +127,14 @@ exports.Prisma.FacultyScalarFieldEnum = {
   password: 'password'
 };
 
+exports.Prisma.AnnouncementScalarFieldEnum = {
+  id: 'id',
+  message: 'message',
+  facultyId: 'facultyId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.DepartmentScalarFieldEnum = {
   departmentId: 'departmentId',
   acronym: 'acronym',
@@ -167,6 +175,10 @@ exports.Prisma.FacultyOrderByRelevanceFieldEnum = {
   password: 'password'
 };
 
+exports.Prisma.AnnouncementOrderByRelevanceFieldEnum = {
+  message: 'message'
+};
+
 exports.Prisma.DepartmentOrderByRelevanceFieldEnum = {
   acronym: 'acronym',
   departmentName: 'departmentName'
@@ -194,6 +206,7 @@ exports.Prisma.AttendanceOrderByRelevanceFieldEnum = {
 
 exports.Prisma.ModelName = {
   Faculty: 'Faculty',
+  Announcement: 'Announcement',
   Department: 'Department',
   Student: 'Student',
   Attendance: 'Attendance'

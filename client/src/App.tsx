@@ -7,6 +7,7 @@ import EditStudent from "./pages/edit-student";
 import { Login } from "./pages/login";
 import { Signup } from "./pages/signup";
 import { AttendanceReports } from "./pages/attendance-reports";
+import { Announcements } from "./pages/announcements";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const token = localStorage.getItem("token");
@@ -29,6 +30,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <AttendanceReports />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/announcements"
+            element={
+              <ProtectedRoute>
+                <Announcements />
               </ProtectedRoute>
             }
           />

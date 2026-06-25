@@ -75,8 +75,14 @@ export const Homepage = () => {
   const { data: attendances } = useQuery<Attendance[]>({
     queryKey: ["attendances"],
     queryFn: coleAPI(
-      "/attendances?date=" + new Date().toISOString().slice(0, 10)
+      "/attendances?date=" + new Date().toISOString().slice(0, 10),
     ),
+  });
+
+  const { data: announcements } = useQuery<{ id: number; message: string }[]>({
+    queryKey: ["public-announcements"],
+    queryFn: coleAPI("/announcements/public"),
+    refetchInterval: 60000,
   });
 
   const { mutateAsync: addAttendance, data: student } = useMutation({
@@ -128,7 +134,7 @@ export const Homepage = () => {
           if (error.response?.data?.error === "COOLDOWN_ACTIVE") {
             toast.warning(error.response.data.message);
             const utterance = new SpeechSynthesisUtterance(
-              error.response.data.message
+              error.response.data.message,
             );
             speechSynthesis.speak(utterance);
           } else if (error.response?.data?.status === 404) {
@@ -272,7 +278,7 @@ export const Homepage = () => {
                         ? `${attendance.department}-${
                             attendance.year
                           } ${new Date(
-                            attendance?.timestamp
+                            attendance?.timestamp,
                           ).toLocaleTimeString([], {
                             hour: "2-digit",
                             minute: "2-digit",
@@ -325,10 +331,18 @@ export const Homepage = () => {
       </div>
 
       <div className="flex gap-2 p-1 font-extrabold text-xl text-white bg-red-600">
-        <Megaphone className="transform -rotate-12" />
-        <Marquee className="uppercase">
-          Announcement wlay klase ron kay di rako mo meet ninyo!
-        </Marquee>
+        {announcements && announcements.length > 0 ? (
+          <>
+            <Megaphone className="transform -rotate-12" />
+            <Marquee className="uppercase">
+              {announcements
+                .map((a: { id: number; message: string }) => a.message)
+                .join("   ★   ")}
+            </Marquee>
+          </>
+        ) : (
+          <span className="opacity-0">.</span>
+        )}
       </div>
     </div>
   );

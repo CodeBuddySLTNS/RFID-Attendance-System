@@ -8,13 +8,25 @@ datasource db {
 }
 
 model Faculty {
-  id       Int       @id @default(autoincrement())
-  name     String    @db.VarChar(100)
-  username String    @unique @db.VarChar(255)
-  password String    @db.VarChar(255)
-  students Student[]
+  id            Int            @id @default(autoincrement())
+  name          String         @db.VarChar(100)
+  username      String         @unique @db.VarChar(255)
+  password      String         @db.VarChar(255)
+  students      Student[]
+  announcements Announcement[]
 
   @@map("faculties")
+}
+
+model Announcement {
+  id        Int      @id @default(autoincrement())
+  message   String   @db.Text
+  facultyId Int
+  faculty   Faculty  @relation(fields: [facultyId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("announcements")
 }
 
 model Department {

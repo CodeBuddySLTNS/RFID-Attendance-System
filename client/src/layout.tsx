@@ -73,6 +73,11 @@ const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
                     Attendance Reports
                   </li>
                 </Link>
+                <Link to="/announcements">
+                  <li className="w-full p-1 rounded text-center hover:bg-gray-500">
+                    Announcements
+                  </li>
+                </Link>
                 <li
                   className="w-full p-1 rounded text-center hover:bg-red-600 text-red-100 cursor-pointer"
                   onClick={handleLogout}

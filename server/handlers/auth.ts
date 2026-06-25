@@ -30,8 +30,14 @@ const signup = async (req: Request, res: Response) => {
     },
   });
 
-  const accessToken = generateToken({ facultyId: faculty.id, username: faculty.username }, 15 * 60);
-  const refreshToken = generateToken({ facultyId: faculty.id, username: faculty.username }, 7 * 24 * 60 * 60);
+  const accessToken = generateToken(
+    { facultyId: faculty.id, username: faculty.username },
+    15 * 60,
+  );
+  const refreshToken = generateToken(
+    { facultyId: faculty.id, username: faculty.username },
+    7 * 24 * 60 * 60,
+  );
 
   res.status(status.CREATED).json({
     message: "Faculty registered successfully",
@@ -66,8 +72,14 @@ const login = async (req: Request, res: Response) => {
     throw new CustomError("Invalid credentials", status.UNAUTHORIZED);
   }
 
-  const accessToken = generateToken({ facultyId: faculty.id, username: faculty.username }, 15 * 60);
-  const refreshToken = generateToken({ facultyId: faculty.id, username: faculty.username }, 7 * 24 * 60 * 60);
+  const accessToken = generateToken(
+    { facultyId: faculty.id, username: faculty.username },
+    15 * 60,
+  );
+  const refreshToken = generateToken(
+    { facultyId: faculty.id, username: faculty.username },
+    7 * 24 * 60 * 60,
+  );
 
   res.json({
     message: "Login successful",
@@ -101,7 +113,10 @@ const refresh = async (req: Request, res: Response) => {
       throw new CustomError("Invalid token owner", status.UNAUTHORIZED);
     }
 
-    const newAccessToken = generateToken({ facultyId: faculty.id, username: faculty.username }, 15 * 60);
+    const newAccessToken = generateToken(
+      { facultyId: faculty.id, username: faculty.username },
+      1 * 60,
+    );
 
     res.json({
       token: newAccessToken,
