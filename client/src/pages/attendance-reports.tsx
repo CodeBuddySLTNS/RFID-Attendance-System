@@ -4,6 +4,7 @@ import type { Attendance } from "@/types/data.types";
 import { useState, useMemo } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import * as XLSX from "xlsx";
 import {
   Calendar,
   Search,
@@ -50,6 +51,50 @@ export const AttendanceReports = () => {
       return matchSearch && matchType && matchDate;
     });
   }, [attendances, searchTerm, selectedType, selectedDate]);
+
+  const handleExportExcel = () => {
+    if (!filteredData || filteredData.length === 0) return;
+
+    const exportData = filteredData.map((row) => {
+      const dateObj = new Date(row.timestamp);
+      const timeStr = dateObj.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      });
+      const dateStr = dateObj.toLocaleDateString("en-US", {
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
+      });
+      return {
+        "Student Name": row.name,
+        Department: row.department ? row.department.toUpperCase() : "",
+        "Year Level": row.year,
+        Status: row.type,
+        Time: timeStr,
+        Date: dateStr,
+      };
+    });
+
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Attendance Reports");
+
+    const maxLens = Object.keys(exportData[0] || {}).map((key) => {
+      let maxVal = key.length;
+      exportData.forEach((row) => {
+        const val = row[key as keyof typeof row];
+        if (val !== undefined && val !== null) {
+          maxVal = Math.max(maxVal, String(val).length);
+        }
+      });
+      return { wch: maxVal + 2 };
+    });
+    worksheet["!cols"] = maxLens;
+
+    XLSX.writeFile(workbook, `attendance_report_${selectedDate || "all"}.xlsx`);
+  };
 
   const stats = useMemo(() => {
     const todayStr = new Date().toISOString().split("T")[0];
@@ -153,7 +198,7 @@ export const AttendanceReports = () => {
         </Card>
       </div>
 
-      <Card className="p-4 bg-white border border-slate-150 shadow-sm">
+      <Card className="gap-0 p-4 bg-white border border-slate-150 shadow-sm">
         <div className="flex flex-col lg:flex-row gap-4 justify-between items-stretch lg:items-center">
           <div className="flex flex-1 flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
@@ -231,6 +276,17 @@ export const AttendanceReports = () => {
               Out
             </Button>
           </div>
+
+          <Button
+            variant="outline"
+            type="button"
+            size="sm"
+            onClick={handleExportExcel}
+            disabled={filteredData.length === 0}
+            className="w-full sm:w-auto px-4 bg-green-200 hover:bg-green-600 hover:text-white transition-colors border border-green-300 cursor-pointer"
+          >
+            Export as Excel
+          </Button>
         </div>
 
         <div className="mt-6 overflow-x-auto border border-slate-100 rounded-lg">
