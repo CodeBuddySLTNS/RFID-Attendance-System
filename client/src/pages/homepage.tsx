@@ -72,7 +72,6 @@ export const Homepage = () => {
   const rfidRef = useRef<HTMLInputElement>(null);
   const [delay, setDelay] = useState(0);
   const [currentStudent, setCurrentStudent] = useState<any>(null);
-  const [soundUnlocked, setSoundUnlocked] = useState(false);
 
   const [time, setTime] = useState<TimeData>({
     hours: "00",
@@ -233,16 +232,37 @@ export const Homepage = () => {
     }
   };
 
-  const speakText = (text: string, type: "IN" | "OUT" | "ERROR" = "IN") => {
+  const [soundUnlocked, setSoundUnlocked] = useState(false);
+  const soundUnlockedRef = useRef(soundUnlocked);
+
+  useEffect(() => {
+    soundUnlockedRef.current = soundUnlocked;
+  }, [soundUnlocked]);
+
+  const speakText = (
+    text: string,
+    type: "IN" | "OUT" | "ERROR" = "IN",
+    force: boolean = false,
+  ) => {
+    if (!soundUnlockedRef.current && !force) return;
     playAudioChime(type);
     setTimeout(() => {
       playTTSAudio(text);
     }, 120);
   };
 
-  const enableAudio = () => {
-    setSoundUnlocked(true);
-    speakText("System is now ready!", "IN");
+  const toggleAudio = () => {
+    const nextState = !soundUnlocked;
+    setSoundUnlocked(nextState);
+    soundUnlockedRef.current = nextState;
+
+    if (nextState) {
+      speakText("System is now ready!", "IN", true);
+    } else {
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
+    }
   };
 
   // unlock browser audio policy and preload tts voices
@@ -533,9 +553,9 @@ export const Homepage = () => {
                 <span>{getDate().day.toUpperCase()}</span>
                 <button
                   type="button"
-                  onClick={enableAudio}
+                  onClick={toggleAudio}
                   title={
-                    soundUnlocked ? "Audio Active" : "Click to Enable Audio"
+                    soundUnlocked ? "Click to Mute Audio" : "Click to Enable Audio"
                   }
                   className="flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded bg-white/20 hover:bg-white/30 text-white cursor-pointer transition-colors"
                 >
@@ -548,7 +568,7 @@ export const Homepage = () => {
                     <>
                       <VolumeX className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
                       <span className="text-amber-300 animate-pulse">
-                        Enable Sound
+                        Sound OFF
                       </span>
                     </>
                   )}
