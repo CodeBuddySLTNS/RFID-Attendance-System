@@ -375,14 +375,16 @@ export const Homepage = () => {
   useEffect(() => {
     if (delay > 0) {
       const interval = setInterval(() => {
-        rfidRef.current?.focus();
+        // TODO: only for development
+        // rfidRef.current?.focus();
         setDelay((prev) => prev - 1);
       }, 1000);
 
       return () => clearInterval(interval);
     } else {
       rfidRef.current!.value = "";
-      rfidRef.current?.focus();
+      // TODO: only for development
+      // rfidRef.current?.focus();
       queryClient.invalidateQueries({ queryKey: ["attendances"] });
     }
   }, [delay, queryClient]);
@@ -403,32 +405,33 @@ export const Homepage = () => {
     return () => clearInterval(interval);
   }, []);
 
-  rfidRef.current?.focus();
+  // TODO: only for development
+  // rfidRef.current?.focus();
 
   return (
-    <div className="w-full h-full grid grid-rows-[1fr_max-content]">
-      <div className="w-full p-3 grid grid-cols-[450px_1fr] gap-3">
+    <div className="w-full min-h-full flex flex-col justify-between lg:h-full lg:grid lg:grid-rows-[1fr_max-content]">
+      <div className="w-full p-2 lg:p-3 flex flex-col lg:grid lg:grid-cols-[450px_1fr] gap-2 lg:gap-3">
         <div className="flex justify-center items-center">
-          <div className="w-full h-full grid grid-rows-[40px_1fr_40px] gap-2">
+          <div className="w-full h-full flex flex-col lg:grid lg:grid-rows-[40px_1fr_40px] gap-1.5 lg:gap-2">
             {delay > 0 && currentStudent ? (
               (currentStudent?.type === "IN" && (
-                <p className="w-full p-1 text-center text-2xl font-extrabold text-white rounded bg-green-600">
+                <p className="w-full p-1 text-center text-sm lg:text-2xl font-extrabold text-white rounded bg-green-600">
                   Welcome!
                 </p>
               )) ||
               (currentStudent?.type === "OUT" && (
-                <p className="w-full p-1 text-center text-2xl font-extrabold text-white rounded bg-primary">
+                <p className="w-full p-1 text-center text-sm lg:text-2xl font-extrabold text-white rounded bg-primary">
                   Goodbye, See you again!
                 </p>
               ))
             ) : (
-              <p className="w-full p-1 text-center text-2xl font-extrabold text-white rounded bg-primary"></p>
+              <p className="w-full p-1 text-center text-sm lg:text-2xl font-extrabold text-white rounded bg-primary min-h-[28px] lg:min-h-0"></p>
             )}
 
-            <div className="w-full grid grid-rows-[1fr_max-content] gap-1">
+            <div className="w-full flex-1 flex flex-col lg:grid lg:grid-rows-[1fr_max-content] gap-1">
               {delay > 0 && currentStudent ? (
                 <div
-                  className={`rounded border bg-gray-100 bg-cover bg-center`}
+                  className="w-full aspect-[4/3] max-h-[200px] lg:max-h-none lg:h-full lg:aspect-auto rounded border bg-gray-100 bg-cover bg-center mx-auto"
                   style={{
                     backgroundImage: `url(${
                       currentStudent?.photo
@@ -438,14 +441,14 @@ export const Homepage = () => {
                   }}
                 ></div>
               ) : (
-                <div className="w-full rounded bg-gray-100"></div>
+                <div className="w-full aspect-[4/3] max-h-[200px] lg:max-h-none lg:h-full lg:aspect-auto rounded bg-gray-100 mx-auto"></div>
               )}
-              <div className="w-full p-1 text-center text-2xl font-extrabold text-white rounded bg-gray-600">
-                <div>
+              <div className="w-full p-1 text-center text-sm lg:text-2xl font-extrabold text-white rounded bg-gray-600">
+                <div className="truncate px-1">
                   {delay > 0 && currentStudent ? currentStudent.name : "-----"}
                 </div>
                 <Separator />
-                <div>
+                <div className="truncate px-1">
                   {delay > 0 && currentStudent
                     ? `${currentStudent.department}-${currentStudent.year}`
                     : "-----"}
@@ -453,7 +456,7 @@ export const Homepage = () => {
                 {delay > 0 && currentStudent?.rfidTag && (
                   <>
                     <Separator />
-                    <div className="text-sm font-semibold text-gray-300">
+                    <div className="text-[10px] lg:text-sm font-semibold text-gray-300 truncate">
                       RFID: {currentStudent.rfidTag}
                     </div>
                   </>
@@ -461,7 +464,7 @@ export const Homepage = () => {
               </div>
             </div>
 
-            <div className="w-full p-1 text-center text-2xl font-extrabold text-white rounded bg-gray-600">
+            <div className="w-full p-1 text-center text-xs lg:text-2xl font-extrabold text-white rounded bg-gray-600 min-h-[28px] lg:min-h-0 flex items-center justify-center">
               {delay > 0 &&
                 currentStudent &&
                 new Date(currentStudent.timestamp).toLocaleTimeString([], {
@@ -473,27 +476,27 @@ export const Homepage = () => {
           </div>
         </div>
 
-        <div className="w-full grid grid-rows-[2fr_1fr] gap-2">
-          <div className="w-full grid grid-cols-3 gap-2">
+        <div className="w-full flex flex-col lg:grid lg:grid-rows-[2fr_1fr] gap-2">
+          <div className="w-full grid grid-cols-3 gap-1.5 lg:gap-2">
             {attendancesData.map((attendance, index) => (
               <div
                 key={index}
-                className="w-full h-full grid grid-rows-[40px_1fr] gap-2"
+                className="w-full h-full flex flex-col lg:grid lg:grid-rows-[40px_1fr] gap-1 lg:gap-2"
               >
-                <div className="w-full flex justify-end items-center p-1 pr-2 text-center font-extrabold text-white rounded bg-primary">
+                <div className="w-full flex justify-end items-center p-0.5 pr-1 lg:p-1 lg:pr-2 text-center font-extrabold text-white rounded bg-primary min-h-[28px] lg:min-h-0">
                   {attendance?.type && attendance.type === "IN" ? (
-                    <p className="w-14 border-2 rounded bg-green-600">IN</p>
+                    <p className="w-10 lg:w-14 text-[10px] lg:text-base border lg:border-2 rounded bg-green-600">IN</p>
                   ) : attendance?.type && attendance.type === "OUT" ? (
-                    <p className="w-14 border-2 rounded bg-red-600">OUT</p>
+                    <p className="w-10 lg:w-14 text-[10px] lg:text-base border lg:border-2 rounded bg-red-600">OUT</p>
                   ) : (
-                    <p className="w-14 border-2 rounded bg-gray-400">-----</p>
+                    <p className="w-10 lg:w-14 text-[10px] lg:text-base border lg:border-2 rounded bg-gray-400">-----</p>
                   )}
                 </div>
 
-                <div className="w-full grid grid-rows-[1fr_max-content] gap-1">
+                <div className="w-full flex-1 flex flex-col lg:grid lg:grid-rows-[1fr_max-content] gap-1">
                   {attendance?.name ? (
                     <div
-                      className={`rounded border bg-gray-100 bg-cover bg-center`}
+                      className="w-full aspect-[4/3] lg:aspect-auto lg:h-full rounded border bg-gray-100 bg-cover bg-center"
                       style={{
                         backgroundImage: `url(${
                           attendance.photo
@@ -503,12 +506,14 @@ export const Homepage = () => {
                       }}
                     ></div>
                   ) : (
-                    <div className="w-full rounded bg-gray-100"></div>
+                    <div className="w-full aspect-[4/3] lg:aspect-auto lg:h-full rounded bg-gray-100"></div>
                   )}
-                  <div className="w-full p-1 text-center font-extrabold text-white rounded bg-gray-600">
-                    <h2>{attendance?.name ?? "NO DATA"}</h2>
+                  <div className="w-full p-0.5 lg:p-1 text-center font-extrabold text-white rounded bg-gray-600">
+                    <h2 className="text-[11px] lg:text-base truncate px-0.5">
+                      {attendance?.name ?? "NO DATA"}
+                    </h2>
                     <Separator />
-                    <p className="font-normal text-sm">
+                    <p className="font-normal text-[9px] lg:text-sm truncate px-0.5">
                       {attendance?.department && attendance.year
                         ? `${attendance.department}-${
                             attendance.year
@@ -527,46 +532,42 @@ export const Homepage = () => {
             ))}
           </div>
 
-          <div className="w-full grid grid-cols-2 gap-2">
-            <div className="w-full grid grid-rows-[max-content_1fr] text-center">
-              <div
-                className={`${
-                  delay > 0
-                    ? "bg-red-700 border-2 border-gray-600"
-                    : "bg-green-700"
-                } p-1 rounded text-white font-extrabold`}
-              >
-                {delay > 0 ? "PLEASE WAIT.... " + delay : "TAP YOUR RFID CARD"}
+          <div className="w-full grid grid-cols-2 gap-1.5 lg:gap-2">
+            <div className="w-full flex flex-col lg:grid lg:grid-rows-[max-content_1fr] text-center">
+              <div className="bg-green-700 p-1 rounded text-white font-extrabold text-[10px] lg:text-base">
+                TAP YOUR RFID CARD
               </div>
 
               <input
                 ref={rfidRef}
                 onKeyDown={handleRFIDInput}
-                className="w-full text-center font-extrabold text-4xl outline-0"
+                className="w-full text-center font-extrabold text-lg lg:text-4xl outline-0 py-1 lg:py-0"
                 type="text"
-                disabled={delay > 0}
+                placeholder="----"
               />
             </div>
 
-            <div className="w-full text-center grid grid-rows-[max-content_1fr_max-content] gap-2">
-              <div className="bg-primary p-1 px-3 rounded text-white font-extrabold flex justify-between items-center">
+            <div className="w-full text-center flex flex-col lg:grid lg:grid-rows-[max-content_1fr_max-content] gap-1 lg:gap-2">
+              <div className="bg-primary p-1 px-2 lg:px-3 rounded text-white font-extrabold flex justify-between items-center text-[10px] lg:text-base">
                 <span>{getDate().day.toUpperCase()}</span>
                 <button
                   type="button"
                   onClick={toggleAudio}
                   title={
-                    soundUnlocked ? "Click to Mute Audio" : "Click to Enable Audio"
+                    soundUnlocked
+                      ? "Click to Mute Audio"
+                      : "Click to Enable Audio"
                   }
-                  className="flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded bg-white/20 hover:bg-white/30 text-white cursor-pointer transition-colors"
+                  className="flex items-center gap-0.5 text-[9px] lg:text-xs font-semibold px-1.5 py-0.5 rounded bg-white/20 hover:bg-white/30 text-white cursor-pointer transition-colors"
                 >
                   {soundUnlocked ? (
                     <>
-                      <Volume2 className="w-3.5 h-3.5 text-emerald-300" />
+                      <Volume2 className="w-3 h-3 lg:w-3.5 lg:h-3.5 text-emerald-300" />
                       <span className="text-emerald-300">Sound ON</span>
                     </>
                   ) : (
                     <>
-                      <VolumeX className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
+                      <VolumeX className="w-3 h-3 lg:w-3.5 lg:h-3.5 text-amber-300 animate-pulse" />
                       <span className="text-amber-300 animate-pulse">
                         Sound OFF
                       </span>
@@ -575,11 +576,11 @@ export const Homepage = () => {
                 </button>
               </div>
 
-              <div className="bg-gray-100 rounded flex justify-center items-center text-4xl font-extrabold">
+              <div className="bg-gray-100 rounded flex justify-center items-center text-sm lg:text-4xl font-extrabold min-h-[32px] lg:min-h-0 p-1">
                 <p>{`${time.hours}:${time.minutes}:${time.seconds} ${time.amPm}`}</p>
               </div>
 
-              <div className="bg-primary p-1 rounded text-white font-extrabold">
+              <div className="bg-primary p-1 rounded text-white font-extrabold text-[10px] lg:text-base">
                 {getDate().month} {getDate().date}, {getDate().year}
               </div>
             </div>
@@ -587,10 +588,10 @@ export const Homepage = () => {
         </div>
       </div>
 
-      <div className="flex gap-2 p-1 font-extrabold text-xl text-white bg-red-600">
+      <div className="flex gap-2 p-1 font-extrabold text-xs lg:text-xl text-white bg-red-600">
         {Array.isArray(announcements) && announcements.length > 0 ? (
           <>
-            <Megaphone className="transform -rotate-12" />
+            <Megaphone className="transform -rotate-12 shrink-0 w-4 h-4 lg:w-6 lg:h-6" />
             <Marquee className="uppercase">
               {announcements
                 .map((a: { id: number; message: string }) => a.message)

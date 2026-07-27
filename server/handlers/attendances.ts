@@ -24,7 +24,9 @@ const addAttendance = async (req: Request, res: Response) => {
   // default timestamp and date if not provided
   const now = new Date();
   if (!timestamp) {
-    timestamp = now.toLocaleString("sv-SE", { timeZone: "Asia/Manila" }).replace("T", " ");
+    timestamp = now
+      .toLocaleString("sv-SE", { timeZone: "Asia/Manila" })
+      .replace("T", " ");
   }
   if (!date) {
     date = now.toISOString().slice(0, 10);
@@ -40,12 +42,24 @@ const addAttendance = async (req: Request, res: Response) => {
 
   // in register mode, only broadcast the tag — skip attendance recording
   if (isRegisterMode) {
-    res.json({ message: "RFID tag scanned (register mode)", rfidTag, registerOnly: true });
+    res.json({
+      message: "RFID tag scanned (register mode)",
+      rfidTag,
+      registerOnly: true,
+    });
     return;
   }
 
   const student = await Student.getByRfid(rfidTag);
-  const lastTap = await Attendance.getStudentLastAttendance(student?.id!, date);
+
+  if (!student) {
+    const errorData = { status: 404, message: "Student not found", rfidTag };
+    if (io) io.emit("attendance_error", errorData);
+
+    throw new CustomError("Student not found", 404);
+  }
+
+  const lastTap = await Attendance.getStudentLastAttendance(student.id, date);
 
   if (lastTap && lastTap.timestamp) {
     const lastTime = new Date(lastTap.timestamp).getTime();
@@ -60,6 +74,8 @@ const addAttendance = async (req: Request, res: Response) => {
         const cooldownData = {
           error: "COOLDOWN_ACTIVE",
           message: `Please wait ${secondsRemaining} second(s) before tapping again.`,
+          rfidTag,
+          studentId: student.id,
           lastTimestamp: lastTap.timestamp,
         };
         if (io) io.emit("attendance_error", cooldownData);
@@ -71,13 +87,6 @@ const addAttendance = async (req: Request, res: Response) => {
   }
 
   const type = lastTap?.type === "IN" ? "OUT" : "IN";
-
-  if (!student) {
-    const errorData = { status: 404, message: "Student not found", rfidTag };
-    if (io) io.emit("attendance_error", errorData);
-
-    throw new CustomError("Student not found", 404);
-  }
 
   const result = await Attendance.add(student.id, type, timestamp, date);
 
