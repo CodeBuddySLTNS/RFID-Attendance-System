@@ -21,7 +21,7 @@ import { coleAPI } from "@/lib/utils";
 import type { AddStudentData, Department } from "@/types/data.types";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Card,
@@ -31,6 +31,14 @@ import {
 } from "@/components/ui/card";
 import { toast } from "sonner";
 import { isAxiosError } from "axios";
+import { io as ioClient } from "socket.io-client";
+import { AlertCircle } from "lucide-react";
+import config from "../../system.config.json";
+
+const socketServerUrl =
+  config.isProduction && config.prodServer
+    ? config.prodServer
+    : config.devServer || "http://localhost:5000";
 
 export const AddStudent = () => {
   const navigate = useNavigate();
@@ -47,6 +55,8 @@ export const AddStudent = () => {
     watch,
     reset,
     setValue,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm<AddStudentData>({
     defaultValues: {
@@ -64,6 +74,27 @@ export const AddStudent = () => {
     },
   });
 
+  // listen for rfid tap events and notify server of register mode
+  useEffect(() => {
+    const socket = ioClient(socketServerUrl);
+
+    // tell server to skip attendance recording while this page is open
+    socket.emit("enter_register_mode");
+
+    socket.on("rfid_scanned", (data: { rfidTag: string }) => {
+      if (data?.rfidTag) {
+        clearErrors("rfidTag");
+        setValue("rfidTag", data.rfidTag, { shouldValidate: true });
+        toast.info(`RFID Tag captured: ${data.rfidTag}`);
+      }
+    });
+
+    return () => {
+      socket.emit("exit_register_mode");
+      socket.disconnect();
+    };
+  }, [setValue, clearErrors]);
+
   const { mutateAsync: addStudent, isPending } = useMutation({
     mutationFn: coleAPI("/students/add", "POST"),
     onSuccess: () => {
@@ -71,14 +102,26 @@ export const AddStudent = () => {
       reset();
     },
     onError: (error) => {
-      if (
-        isAxiosError(error) &&
-        error.response?.data?.message === "Already exists!"
-      ) {
-        toast.error("RFID tag already exists. Please use a different tag.");
-      } else {
-        toast.error(`Error adding student.`);
+      if (isAxiosError(error)) {
+        const msg = error.response?.data?.message || "";
+        const status = error.response?.status;
+        if (
+          status === 409 ||
+          msg === "Already exists!" ||
+          msg.toLowerCase().includes("rfid") ||
+          msg.toLowerCase().includes("already")
+        ) {
+          const duplicateMsg =
+            msg || "RFID tag is already registered to another student.";
+          setError("rfidTag", {
+            type: "manual",
+            message: duplicateMsg,
+          });
+          toast.error(duplicateMsg);
+          return;
+        }
       }
+      toast.error("Error adding student.");
     },
   });
 
@@ -116,24 +159,37 @@ export const AddStudent = () => {
           <FieldSet>
             <FieldGroup className="w-full grid grid-cols-[1fr_1fr_1fr_max-content]">
               <Field className="gap-0.5">
-                <FieldLabel>
+                <FieldLabel className="flex justify-between items-center">
                   <FieldTitle>RFID Tag</FieldTitle>
+                  <span className="flex items-center gap-1.5 text-xs text-emerald-600 font-medium">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    Listening for tap...
+                  </span>
                 </FieldLabel>
                 <FieldContent>
                   <input
-                    className="w-full rounded-md border px-3 py-2"
+                    className={`w-full rounded-md border px-3 py-2 transition-colors ${
+                      errors.rfidTag
+                        ? "border-red-500 bg-red-50/50 text-red-900 focus:outline-none focus:ring-2 focus:ring-red-500"
+                        : "border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-950"
+                    }`}
                     placeholder="1029384756"
                     {...register("rfidTag", {
                       required: "RFID tag is required",
+                      onChange: () => clearErrors("rfidTag"),
                     })}
                   />
-                  <FieldError
-                    errors={[
-                      errors.rfidTag
-                        ? { message: errors.rfidTag.message }
-                        : undefined,
-                    ]}
-                  />
+                  {errors.rfidTag ? (
+                    <div className="flex items-center gap-1 mt-1 text-xs text-red-600 font-medium">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      <span>{errors.rfidTag.message}</span>
+                    </div>
+                  ) : (
+                    <FieldError errors={[]} />
+                  )}
                 </FieldContent>
               </Field>
               <Field className="gap-0.5">

@@ -42,6 +42,12 @@ const addStudent = async (req: Request, res: Response) => {
     throw new CustomError("Missing required fields", 400);
   }
 
+  // check for duplicate rfid tag
+  const existingStudent = await Student.getByRfid(rfidTag);
+  if (existingStudent) {
+    throw new CustomError("RFID tag is already registered to another student.", 409);
+  }
+
   const result = await Student.add(payload);
 
   res.status(201).json({

@@ -13,6 +13,7 @@ const getAttendances = async (req: Request, res: Response) => {
 };
 
 const addAttendance = async (req: Request, res: Response) => {
+  const io = req.app.get("io");
   const rfidTag = req.body.rfidTag || req.body.rfid;
   let { timestamp, date } = req.body;
 
@@ -29,10 +30,18 @@ const addAttendance = async (req: Request, res: Response) => {
     date = now.toISOString().slice(0, 10);
   }
 
-  const io = req.app.get("io");
+  // check if any client is in register mode (add student page open)
+  const isRegisterMode = req.app.get("registerMode")?.();
+
   if (io) {
     // broadcast scanned rfid tag
     io.emit("rfid_scanned", { rfidTag });
+  }
+
+  // in register mode, only broadcast the tag — skip attendance recording
+  if (isRegisterMode) {
+    res.json({ message: "RFID tag scanned (register mode)", rfidTag, registerOnly: true });
+    return;
   }
 
   const student = await Student.getByRfid(rfidTag);
@@ -53,7 +62,6 @@ const addAttendance = async (req: Request, res: Response) => {
           message: `Please wait ${secondsRemaining} second(s) before tapping again.`,
           lastTimestamp: lastTap.timestamp,
         };
-        const io = req.app.get("io");
         if (io) io.emit("attendance_error", cooldownData);
 
         res.status(429).json(cooldownData);
@@ -65,8 +73,7 @@ const addAttendance = async (req: Request, res: Response) => {
   const type = lastTap?.type === "IN" ? "OUT" : "IN";
 
   if (!student) {
-    const errorData = { status: 404, message: "Student not found" };
-    const io = req.app.get("io");
+    const errorData = { status: 404, message: "Student not found", rfidTag };
     if (io) io.emit("attendance_error", errorData);
 
     throw new CustomError("Student not found", 404);
@@ -83,11 +90,11 @@ const addAttendance = async (req: Request, res: Response) => {
     department: student.department,
     year: student.year,
     photo: student.photo,
+    rfidTag,
     timestamp,
     type,
   };
 
-  const io = req.app.get("io");
   if (io) {
     // broadcast tap event to connected clients
     io.emit("attendance_tapped", payload);

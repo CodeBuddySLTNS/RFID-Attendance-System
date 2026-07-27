@@ -1,5 +1,5 @@
 {
-  "isProduction": false,
-  "prodServer": "",
+  "isProduction": true,
+  "prodServer": "https://rfid.ctech-solutions.site",
   "devServer": "http://localhost:5000"
 }

@@ -25,8 +25,26 @@ const io = new Server(httpServer, {
 
 app.set("io", io);
 
+// track clients in register mode (add student page open)
+let registerModeClients = 0;
+app.set("registerMode", () => registerModeClients > 0);
+
 io.on("connection", (socket) => {
   console.log("socket client connected:", socket.id);
+
+  socket.on("enter_register_mode", () => {
+    registerModeClients++;
+    console.log("register mode on, clients:", registerModeClients);
+  });
+
+  socket.on("exit_register_mode", () => {
+    registerModeClients = Math.max(0, registerModeClients - 1);
+    console.log("register mode off, clients:", registerModeClients);
+  });
+
+  socket.on("disconnect", () => {
+    // safety: if client disconnects without exiting, handled by the page emitting exit on unmount
+  });
 });
 
 const PORT = process.env.PORT || 5000;

@@ -2,7 +2,7 @@ import { Separator } from "@/components/ui/separator";
 import { coleAPI } from "@/lib/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
-import { Megaphone } from "lucide-react";
+import { Megaphone, Volume2, VolumeX } from "lucide-react";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import Marquee from "react-fast-marquee";
 import { toast } from "sonner";
@@ -10,13 +10,15 @@ import { io as ioClient } from "socket.io-client";
 import config from "../../system.config.json";
 import type { Attendance } from "@/types/data.types";
 
-const url = config.isProduction
-  ? config.prodServer + "/api"
-  : config.devServer + "/api";
+const url =
+  config.isProduction && config.prodServer
+    ? config.prodServer + "/api"
+    : (config.devServer || "http://localhost:5000") + "/api";
 
-const socketServerUrl = config.isProduction
-  ? config.prodServer || window.location.origin
-  : config.devServer || "http://localhost:5000";
+const socketServerUrl =
+  config.isProduction && config.prodServer
+    ? config.prodServer
+    : config.devServer || "http://localhost:5000";
 
 interface TimeData {
   hours: string;
@@ -70,6 +72,7 @@ export const Homepage = () => {
   const rfidRef = useRef<HTMLInputElement>(null);
   const [delay, setDelay] = useState(0);
   const [currentStudent, setCurrentStudent] = useState<any>(null);
+  const [soundUnlocked, setSoundUnlocked] = useState(false);
 
   const [time, setTime] = useState<TimeData>({
     hours: "00",
@@ -95,6 +98,186 @@ export const Homepage = () => {
     mutationFn: coleAPI("/attendances/add", "POST"),
   });
 
+  let globalAudioCtx: AudioContext | null = null;
+
+  const getAudioContext = () => {
+    try {
+      if (!globalAudioCtx) {
+        const AudioCtx =
+          window.AudioContext || (window as any).webkitAudioContext;
+        if (AudioCtx) {
+          globalAudioCtx = new AudioCtx();
+        }
+      }
+      if (globalAudioCtx && globalAudioCtx.state === "suspended") {
+        globalAudioCtx.resume();
+      }
+      return globalAudioCtx;
+    } catch (err) {
+      return null;
+    }
+  };
+
+  const playAudioChime = (type: "IN" | "OUT" | "ERROR") => {
+    try {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      if (type === "IN") {
+        osc.frequency.setValueAtTime(523.25, now);
+        osc.frequency.setValueAtTime(659.25, now + 0.1);
+        osc.frequency.setValueAtTime(783.99, now + 0.2);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+        osc.start(now);
+        osc.stop(now + 0.4);
+      } else if (type === "OUT") {
+        osc.frequency.setValueAtTime(783.99, now);
+        osc.frequency.setValueAtTime(659.25, now + 0.1);
+        osc.frequency.setValueAtTime(523.25, now + 0.2);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+        osc.start(now);
+        osc.stop(now + 0.4);
+      } else {
+        osc.frequency.setValueAtTime(330, now);
+        osc.frequency.setValueAtTime(220, now + 0.15);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+        osc.start(now);
+        osc.stop(now + 0.3);
+      }
+    } catch (err) {
+      console.warn("audio chime failed:", err);
+    }
+  };
+
+  const speakWebSpeech = (text: string) => {
+    if (!("speechSynthesis" in window)) return;
+    try {
+      if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+      }
+      window.speechSynthesis.resume();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "en-US";
+      (window as any)._activeUtterance = utterance;
+
+      const voices = window.speechSynthesis.getVoices();
+      if (voices && voices.length > 0) {
+        const englishVoices = voices.filter(
+          (v) =>
+            v.lang.startsWith("en") ||
+            v.lang.includes("US") ||
+            v.lang.includes("GB"),
+        );
+        const preferredVoice =
+          englishVoices.find(
+            (v) =>
+              v.name.toLowerCase().includes("google") ||
+              v.name.toLowerCase().includes("natural") ||
+              v.name.toLowerCase().includes("us english") ||
+              v.name.toLowerCase().includes("samantha") ||
+              v.name.toLowerCase().includes("zira") ||
+              v.name.toLowerCase().includes("jenny"),
+          ) ||
+          englishVoices.find((v) => v.lang === "en-US") ||
+          englishVoices[0] ||
+          voices[0];
+
+        if (preferredVoice) {
+          utterance.voice = preferredVoice;
+        }
+      }
+
+      utterance.rate = 0.85;
+      utterance.pitch = 1.0;
+      utterance.volume = 1.0;
+
+      utterance.onend = () => {
+        delete (window as any)._activeUtterance;
+      };
+      utterance.onerror = () => {
+        delete (window as any)._activeUtterance;
+      };
+
+      window.speechSynthesis.speak(utterance);
+    } catch (err) {
+      console.warn("web speech failed:", err);
+    }
+  };
+
+  const playTTSAudio = (text: string) => {
+    try {
+      const audioUrl = `https://api.streamelements.com/kappa/v2/speech?voice=Joanna&text=${encodeURIComponent(
+        text,
+      )}`;
+      const audio = new Audio(audioUrl);
+      audio.volume = 1.0;
+
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
+          console.warn("online tts blocked or failed, using web speech:", err);
+          speakWebSpeech(text);
+        });
+      }
+    } catch (err) {
+      speakWebSpeech(text);
+    }
+  };
+
+  const speakText = (text: string, type: "IN" | "OUT" | "ERROR" = "IN") => {
+    playAudioChime(type);
+    setTimeout(() => {
+      playTTSAudio(text);
+    }, 120);
+  };
+
+  const enableAudio = () => {
+    setSoundUnlocked(true);
+    speakText("System is now ready!", "IN");
+  };
+
+  // unlock browser audio policy and preload tts voices
+  useEffect(() => {
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.getVoices();
+      window.speechSynthesis.onvoiceschanged = () => {
+        window.speechSynthesis.getVoices();
+      };
+    }
+
+    const unlockAudio = () => {
+      setSoundUnlocked(true);
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.resume();
+      }
+      // silent audio play to unlock html5 audio policy in chrome/brave
+      const silentAudio = new Audio(
+        "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA",
+      );
+      silentAudio.play().catch(() => {});
+
+      window.removeEventListener("click", unlockAudio);
+      window.removeEventListener("keydown", unlockAudio);
+    };
+
+    window.addEventListener("click", unlockAudio);
+    window.addEventListener("keydown", unlockAudio);
+
+    return () => {
+      window.removeEventListener("click", unlockAudio);
+      window.removeEventListener("keydown", unlockAudio);
+    };
+  }, []);
+
   // listen for real-time socket.io attendance events from esp32/server
   useEffect(() => {
     const socket = ioClient(socketServerUrl);
@@ -102,24 +285,30 @@ export const Homepage = () => {
     socket.on("attendance_tapped", (studentData: any) => {
       setCurrentStudent(studentData);
       setDelay(3);
+      if (rfidRef.current && studentData?.rfidTag) {
+        rfidRef.current.value = studentData.rfidTag;
+      }
       queryClient.invalidateQueries({ queryKey: ["attendances"] });
 
+      const type = studentData?.type === "OUT" ? "OUT" : "IN";
       const textToSpeak = studentData
-        ? studentData.type === "IN"
+        ? type === "IN"
           ? `Welcome ${studentData.firstName} ${studentData.lastName}`
           : `Goodbye ${studentData.firstName} ${studentData.lastName}, see you again!`
         : "Student not found";
-      const utterance = new SpeechSynthesisUtterance(textToSpeak);
-      speechSynthesis.speak(utterance);
+      speakText(textToSpeak, type);
     });
 
     socket.on("attendance_error", (errorData: any) => {
+      if (rfidRef.current && errorData?.rfidTag) {
+        rfidRef.current.value = errorData.rfidTag;
+      }
       if (errorData?.error === "COOLDOWN_ACTIVE") {
         toast.warning(errorData.message);
-        const utterance = new SpeechSynthesisUtterance(errorData.message);
-        speechSynthesis.speak(utterance);
+        speakText(errorData.message, "ERROR");
       } else if (errorData?.status === 404) {
         toast.error("Student not found. Please register the student.");
+        speakText("Student not found. Please register the student.", "ERROR");
       }
     });
 
@@ -128,13 +317,12 @@ export const Homepage = () => {
     };
   }, [queryClient]);
 
-  const rawAttendances = Array.isArray(attendances) ? attendances : [];
   let attendancesData: Attendance[] = [];
 
-  if (rawAttendances.length >= 3) {
-    attendancesData = rawAttendances;
+  if (attendances && attendances.length >= 3) {
+    attendancesData = attendances;
   } else {
-    attendancesData = [...rawAttendances];
+    attendancesData = [...(attendances || [])];
     const missingCount = 3 - attendancesData.length;
     for (let i = 0; i < missingCount; i++) {
       attendancesData.push({} as Attendance);
@@ -153,10 +341,7 @@ export const Homepage = () => {
         if (isAxiosError(error)) {
           if (error.response?.data?.error === "COOLDOWN_ACTIVE") {
             toast.warning(error.response.data.message);
-            const utterance = new SpeechSynthesisUtterance(
-              error.response.data.message,
-            );
-            speechSynthesis.speak(utterance);
+            speakText(error.response.data.message);
           } else if (error.response?.data?.status === 404) {
             toast.error("Student not found. Please register the student.");
           } else {
@@ -236,13 +421,23 @@ export const Homepage = () => {
                 <div className="w-full rounded bg-gray-100"></div>
               )}
               <div className="w-full p-1 text-center text-2xl font-extrabold text-white rounded bg-gray-600">
-                <div>{delay > 0 && currentStudent ? currentStudent.name : "-----"}</div>
+                <div>
+                  {delay > 0 && currentStudent ? currentStudent.name : "-----"}
+                </div>
                 <Separator />
                 <div>
                   {delay > 0 && currentStudent
                     ? `${currentStudent.department}-${currentStudent.year}`
                     : "-----"}
                 </div>
+                {delay > 0 && currentStudent?.rfidTag && (
+                  <>
+                    <Separator />
+                    <div className="text-sm font-semibold text-gray-300">
+                      RFID: {currentStudent.rfidTag}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
 
@@ -334,8 +529,30 @@ export const Homepage = () => {
             </div>
 
             <div className="w-full text-center grid grid-rows-[max-content_1fr_max-content] gap-2">
-              <div className="bg-primary p-1 rounded text-white font-extrabold">
-                {getDate().day.toUpperCase()}
+              <div className="bg-primary p-1 px-3 rounded text-white font-extrabold flex justify-between items-center">
+                <span>{getDate().day.toUpperCase()}</span>
+                <button
+                  type="button"
+                  onClick={enableAudio}
+                  title={
+                    soundUnlocked ? "Audio Active" : "Click to Enable Audio"
+                  }
+                  className="flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded bg-white/20 hover:bg-white/30 text-white cursor-pointer transition-colors"
+                >
+                  {soundUnlocked ? (
+                    <>
+                      <Volume2 className="w-3.5 h-3.5 text-emerald-300" />
+                      <span className="text-emerald-300">Sound ON</span>
+                    </>
+                  ) : (
+                    <>
+                      <VolumeX className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
+                      <span className="text-amber-300 animate-pulse">
+                        Enable Sound
+                      </span>
+                    </>
+                  )}
+                </button>
               </div>
 
               <div className="bg-gray-100 rounded flex justify-center items-center text-4xl font-extrabold">
