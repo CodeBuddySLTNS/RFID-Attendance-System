@@ -66,17 +66,17 @@ export const Signup = () => {
   };
 
   return (
-    <div className="flex justify-center py-5 items-center h-full bg-slate-50 px-4">
-      <Card className="w-full max-w-md shadow-lg border border-slate-100 bg-white">
+    <div className="flex justify-center py-5 items-center h-full bg-cover bg-center bg-no-repeat bg-[url('/images/bg.jpg')] px-4">
+      <Card className="w-full gap-0 max-w-md shadow-lg border border-slate-100 bg-white/95 backdrop-blur-sm">
         <CardHeader className="text-center pb-2">
           <CardTitle className="text-2xl font-bold tracking-tight text-slate-900">
-            Faculty Sign Up
+            Admin Sign Up
           </CardTitle>
           <CardDescription className="text-slate-500">
             Create an account to manage your students
           </CardDescription>
         </CardHeader>
-        <form onSubmit={handleSubmit(onSubmit)} className="p-6 pt-2">
+        <form onSubmit={handleSubmit(onSubmit)} className="p-6">
           <FieldSet className="space-y-4">
             <FieldGroup className="flex flex-col gap-4">
               <Field className="gap-1">
@@ -159,11 +159,11 @@ export const Signup = () => {
               </Field>
             </FieldGroup>
 
-            <Button type="submit" className="w-full mt-4" disabled={isPending}>
+            <Button type="submit" className="w-full" disabled={isPending}>
               {isPending ? "Creating account..." : "Sign Up"}
             </Button>
 
-            <div className="text-center text-sm text-slate-600 mt-4">
+            <div className="text-center text-sm text-slate-600">
               Already have an account?{" "}
               <Link
                 to="/login"

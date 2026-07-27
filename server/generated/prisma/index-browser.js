@@ -170,39 +170,14 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
-exports.Prisma.FacultyOrderByRelevanceFieldEnum = {
-  name: 'name',
-  username: 'username',
-  password: 'password'
-};
-
-exports.Prisma.AnnouncementOrderByRelevanceFieldEnum = {
-  message: 'message'
-};
-
-exports.Prisma.DepartmentOrderByRelevanceFieldEnum = {
-  acronym: 'acronym',
-  departmentName: 'departmentName'
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
 };
 
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
-};
-
-exports.Prisma.StudentOrderByRelevanceFieldEnum = {
-  rfidTag: 'rfidTag',
-  firstName: 'firstName',
-  lastName: 'lastName',
-  middleInitial: 'middleInitial',
-  address: 'address',
-  guardianName: 'guardianName',
-  guardianPhone: 'guardianPhone',
-  photo: 'photo'
-};
-
-exports.Prisma.AttendanceOrderByRelevanceFieldEnum = {
-  type: 'type'
 };
 
 

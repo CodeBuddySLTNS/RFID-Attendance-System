@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
 }
 
 model Faculty {
@@ -49,7 +49,7 @@ model Student {
   guardianName  String?      @db.VarChar(100)
   guardianPhone String?      @db.VarChar(20)
   departmentId  Int?
-  year          Int          @db.TinyInt
+  year          Int          @db.SmallInt
   photo         String?      @db.VarChar(255)
   facultyId     Int?
   department    Department?  @relation(fields: [departmentId], references: [departmentId], onDelete: SetNull)
@@ -63,7 +63,7 @@ model Attendance {
   id        Int      @id @default(autoincrement())
   studentId Int
   type      String   @db.VarChar(3)
-  timestamp DateTime @db.DateTime(0)
+  timestamp DateTime
   date      DateTime @db.Date
   student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
