@@ -2,6 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=node
 
 generated
+node_modules/
 
 ### Node ###
 # Logs
