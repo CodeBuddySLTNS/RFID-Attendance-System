@@ -124,8 +124,8 @@ export const EditStudent = () => {
   if (isLoading) return <div className="p-10">Loading...</div>;
 
   return (
-    <div className="p-5 px-8">
-      <Card className="w-full mx-auto gap-1">
+    <div className="p-5 px-8 max-w-5xl mx-auto">
+      <Card className="w-full mx-auto gap-1 bg-white/95 backdrop-blur-sm shadow-lg border border-slate-100">
         <CardHeader className="gap-1 text-center">
           <CardTitle className="text-2xl">Edit Student</CardTitle>
           <CardDescription>

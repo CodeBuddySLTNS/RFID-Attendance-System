@@ -105,8 +105,8 @@ export const AddStudent = () => {
   };
 
   return (
-    <div className="p-5 px-8">
-      <Card className="w-full mx-auto gap-1">
+    <div className="p-5 px-8 max-w-5xl mx-auto">
+      <Card className="w-full mx-auto gap-1 bg-white/95 backdrop-blur-sm shadow-lg border border-slate-100">
         <CardHeader className="gap-1 text-center">
           <CardTitle className="text-xl">Add New Student</CardTitle>
           <CardDescription>Fill out the required fields below.</CardDescription>
@@ -122,6 +122,7 @@ export const AddStudent = () => {
                 <FieldContent>
                   <input
                     className="w-full rounded-md border px-3 py-2"
+                    placeholder="1029384756"
                     {...register("rfidTag", {
                       required: "RFID tag is required",
                     })}
@@ -142,6 +143,7 @@ export const AddStudent = () => {
                 <FieldContent>
                   <input
                     className="w-full rounded-md border px-3 py-2"
+                    placeholder="Dela Cruz"
                     {...register("lastName", {
                       required: "Last name is required",
                     })}
@@ -163,6 +165,7 @@ export const AddStudent = () => {
                 <FieldContent>
                   <input
                     className="w-full rounded-md border px-3 py-2"
+                    placeholder="Juan"
                     {...register("firstName", {
                       required: "First name is required",
                     })}
@@ -185,6 +188,7 @@ export const AddStudent = () => {
                   <input
                     className="w-10 rounded-md border px-3 py-2 text-center"
                     maxLength={1}
+                    placeholder="P"
                     {...register("middleInitial")}
                   />
                 </FieldContent>
@@ -221,6 +225,7 @@ export const AddStudent = () => {
                 <FieldContent>
                   <input
                     className="rounded-md border px-3 py-2"
+                    placeholder="Salug, Zamboanga del Norte"
                     {...register("address", {
                       required: "Address is required",
                     })}
@@ -242,6 +247,7 @@ export const AddStudent = () => {
                 <FieldContent>
                   <input
                     className="rounded-md border px-3 py-2"
+                    placeholder="Maria Dela Cruz"
                     {...register("guardianName", {
                       required: "Guardian name is required",
                     })}
@@ -264,6 +270,7 @@ export const AddStudent = () => {
                   <input
                     type="tel"
                     className="rounded-md border px-3 py-2"
+                    placeholder="09123456789"
                     {...register("guardianPhone", {
                       required: "Guardian phone is required",
                     })}

@@ -48,7 +48,14 @@ const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
           onClick={toggleMenu}
         >
           <div className="w-full flex justify-between">
-            <h2 className="text-lg font-bold text-white mb-2">Menu</h2>
+            <div className="flex items-center gap-2 mb-2">
+              <div className="text-lg font-bold text-white">Menu</div>
+              {faculty && (
+                <div className="text-xs text-orange-400 font-bold border border-orange-400 rounded px-1">
+                  ADMIN
+                </div>
+              )}
+            </div>
             <X className="cursor-pointer" />
           </div>
           <Separator />
@@ -60,9 +67,6 @@ const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
             </Link>
             {faculty ? (
               <>
-                <li className="w-full p-1 rounded text-center text-orange-400 font-semibold truncate">
-                  {faculty.name}
-                </li>
                 <Link to="/manage-students">
                   <li className="w-full p-1 rounded text-center hover:bg-gray-500">
                     Manage Students
@@ -96,7 +100,9 @@ const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
         </nav>
       </div>
 
-      <div className="w-full h-full relative">{children}</div>
+      <div className="w-full h-full relative overflow-auto bg-cover bg-center bg-no-repeat bg-[url('/images/bg.jpg')]">
+        {children}
+      </div>
     </div>
   );
 };

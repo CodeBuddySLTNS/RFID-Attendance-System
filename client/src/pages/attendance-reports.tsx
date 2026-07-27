@@ -117,7 +117,7 @@ export const AttendanceReports = () => {
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6 h-full overflow-y-auto">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white/90 backdrop-blur-sm p-4 rounded-lg shadow-sm border border-slate-100">
         <div className="border-l-8 border-orange-500 pl-3 ">
           <h2 className="font-bold text-2xl text-slate-800">
             Attendance Reports
