@@ -1,5 +1,5 @@
 {
   "isProduction": false,
-  "prodServer": "",
+  "prodServer": "https://pac-attendance-monitoring.onrender.com",
   "devServer": "http://localhost:5000"
 }
