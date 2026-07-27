@@ -29,6 +29,12 @@ const addAttendance = async (req: Request, res: Response) => {
     date = now.toISOString().slice(0, 10);
   }
 
+  const io = req.app.get("io");
+  if (io) {
+    // broadcast scanned rfid tag
+    io.emit("rfid_scanned", { rfidTag });
+  }
+
   const student = await Student.getByRfid(rfidTag);
   const lastTap = await Attendance.getStudentLastAttendance(student?.id!, date);
 

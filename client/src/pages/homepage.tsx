@@ -128,12 +128,13 @@ export const Homepage = () => {
     };
   }, [queryClient]);
 
+  const rawAttendances = Array.isArray(attendances) ? attendances : [];
   let attendancesData: Attendance[] = [];
 
-  if (attendances && attendances.length >= 3) {
-    attendancesData = attendances;
+  if (rawAttendances.length >= 3) {
+    attendancesData = rawAttendances;
   } else {
-    attendancesData = [...(attendances || [])];
+    attendancesData = [...rawAttendances];
     const missingCount = 3 - attendancesData.length;
     for (let i = 0; i < missingCount; i++) {
       attendancesData.push({} as Attendance);
@@ -350,7 +351,7 @@ export const Homepage = () => {
       </div>
 
       <div className="flex gap-2 p-1 font-extrabold text-xl text-white bg-red-600">
-        {announcements && announcements.length > 0 ? (
+        {Array.isArray(announcements) && announcements.length > 0 ? (
           <>
             <Megaphone className="transform -rotate-12" />
             <Marquee className="uppercase">
