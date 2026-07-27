@@ -13,10 +13,20 @@ const getAttendances = async (req: Request, res: Response) => {
 };
 
 const addAttendance = async (req: Request, res: Response) => {
-  const { rfidTag, timestamp, date } = req.body;
+  const rfidTag = req.body.rfidTag || req.body.rfid;
+  let { timestamp, date } = req.body;
 
-  if (!rfidTag || !timestamp || !date) {
+  if (!rfidTag) {
     throw new CustomError("Missing required fields", 400);
+  }
+
+  // default timestamp and date if not provided
+  const now = new Date();
+  if (!timestamp) {
+    timestamp = now.toLocaleString("sv-SE", { timeZone: "Asia/Manila" }).replace("T", " ");
+  }
+  if (!date) {
+    date = now.toISOString().slice(0, 10);
   }
 
   const student = await Student.getByRfid(rfidTag);
@@ -32,11 +42,15 @@ const addAttendance = async (req: Request, res: Response) => {
 
       if (diffMs < minIntervalMs) {
         const secondsRemaining = Math.ceil((minIntervalMs - diffMs) / 1000);
-        res.status(429).json({
+        const cooldownData = {
           error: "COOLDOWN_ACTIVE",
           message: `Please wait ${secondsRemaining} second(s) before tapping again.`,
           lastTimestamp: lastTap.timestamp,
-        });
+        };
+        const io = req.app.get("io");
+        if (io) io.emit("attendance_error", cooldownData);
+
+        res.status(429).json(cooldownData);
         return;
       }
     }
@@ -45,10 +59,33 @@ const addAttendance = async (req: Request, res: Response) => {
   const type = lastTap?.type === "IN" ? "OUT" : "IN";
 
   if (!student) {
+    const errorData = { status: 404, message: "Student not found" };
+    const io = req.app.get("io");
+    if (io) io.emit("attendance_error", errorData);
+
     throw new CustomError("Student not found", 404);
   }
 
   const result = await Attendance.add(student.id, type, timestamp, date);
+
+  const payload = {
+    message: "Attendance added",
+    id: result.insertId,
+    name: student.name,
+    firstName: student.firstName,
+    lastName: student.lastName,
+    department: student.department,
+    year: student.year,
+    photo: student.photo,
+    timestamp,
+    type,
+  };
+
+  const io = req.app.get("io");
+  if (io) {
+    // broadcast tap event to connected clients
+    io.emit("attendance_tapped", payload);
+  }
 
   // send sms notification to guardian asynchronously
   // if (student.guardianPhone) {
@@ -62,18 +99,7 @@ const addAttendance = async (req: Request, res: Response) => {
   //   });
   // }
 
-  res.json({
-    message: "Attendance added",
-    id: result.insertId,
-    name: student.name,
-    firstName: student.firstName,
-    lastName: student.lastName,
-    department: student.department,
-    year: student.year,
-    photo: student.photo,
-    timestamp,
-    type,
-  });
+  res.json(payload);
 };
 
 const getFacultyAttendances = async (req: Request, res: Response) => {

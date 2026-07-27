@@ -11,7 +11,24 @@ import studentRoutes from "./routes/students.js";
 import attendanceRoutes from "./routes/attendances.js";
 import announcementRoutes from "./routes/announcements.js";
 
+import { createServer } from "http";
+import { Server } from "socket.io";
+
 const app = express();
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: "*",
+    credentials: true,
+  },
+});
+
+app.set("io", io);
+
+io.on("connection", (socket) => {
+  console.log("socket client connected:", socket.id);
+});
+
 const PORT = process.env.PORT || 5000;
 
 app.use(
@@ -43,6 +60,6 @@ app.get("/*index", (req, res) => {
 
 app.use(errorHandler);
 
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

@@ -1,0 +1,97 @@
+#include <SPI.h>
+#include <MFRC522.h> 
+#include <WiFi.h>
+#include <HTTPClient.h>
+
+// wifi credentials
+const char* ssid     = "esp32";          
+const char* password = "12345678"; 
+
+// node.js backend endpoint
+const char* serverUrl = "http://192.168.254.119:5000/api/attendances/add";
+
+#define RST_PIN 9 
+#define SS_PIN  10 
+
+MFRC522 mfrc522(SS_PIN, RST_PIN); 
+
+// forward declaration
+void sendDataToNodeServer(String uid);
+
+void setup() {
+  Serial.begin(115200);
+  delay(2000);
+  Serial.println("\n==============================");
+  Serial.println("Initializing SPI Bus...");
+  SPI.begin(12, 13, 11, SS_PIN); 
+  Serial.println("Initializing MFRC522...");
+  mfrc522.PCD_Init(); 
+  
+  // connect to wifi hotspot
+  Serial.print("Connecting to Hotspot: ");
+  Serial.println(ssid);
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  
+  Serial.println("\nWi-Fi Connected Successfully!");
+  Serial.println("Setup Complete! Place your RFID card near the reader.");
+  Serial.println("==============================");
+} 
+
+void loop() { 
+  // check for new cards
+  if (!mfrc522.PICC_IsNewCardPresent() || !mfrc522.PICC_ReadCardSerial()) { 
+    return;
+  }
+  
+  // convert raw card bytes to hex string
+  String cardUID = ""; 
+  Serial.print("Card UID Identified: "); 
+  for (byte i = 0; i < mfrc522.uid.size; i++) { 
+    String currentByte = String(mfrc522.uid.uidByte[i] < 0x10 ? "0" : "") + String(mfrc522.uid.uidByte[i], HEX);
+    Serial.print(currentByte + " "); 
+    cardUID += currentByte;
+  } 
+  Serial.println(); 
+  cardUID.toUpperCase();
+  
+  // send data to server if connected
+  if (WiFi.status() == WL_CONNECTED) {
+    sendDataToNodeServer(cardUID);
+  } else {
+    Serial.println("Error: Lost connection to hotspot.");
+  }
+  
+  mfrc522.PICC_HaltA(); 
+  mfrc522.PCD_StopCrypto1();
+  delay(2000);
+}
+
+// send data over network
+void sendDataToNodeServer(String uid) {
+  HTTPClient http;
+  
+  Serial.println("Sending data to Node.js backend...");
+  http.begin(serverUrl);
+  http.addHeader("Content-Type", "application/json");
+
+  // construct json body
+  String jsonPayload = "{\"rfidTag\":\"" + uid + "\"}";
+
+  int httpResponseCode = http.POST(jsonPayload);
+
+  if (httpResponseCode > 0) {
+    String responseString = http.getString();
+    Serial.println("Server Response Code: " + String(httpResponseCode));
+    Serial.println("Server Response Body: " + responseString);
+  } else {
+    Serial.print("Failed to Reach Server. HTTP Error Code: ");
+    Serial.println(httpResponseCode);
+  }
+  
+  http.end();
+}
