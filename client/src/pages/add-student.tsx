@@ -17,7 +17,7 @@ import {
   SelectGroup,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { coleAPI } from "@/lib/utils";
+import { coleAPI, getServerUrl } from "@/lib/utils";
 import type { AddStudentData, Department } from "@/types/data.types";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -33,12 +33,6 @@ import { toast } from "sonner";
 import { isAxiosError } from "axios";
 import { io as ioClient } from "socket.io-client";
 import { AlertCircle } from "lucide-react";
-import config from "../../system.config.json";
-
-const socketServerUrl =
-  config.isProduction && config.prodServer
-    ? config.prodServer
-    : config.devServer || "http://localhost:5000";
 
 export const AddStudent = () => {
   const navigate = useNavigate();
@@ -76,7 +70,7 @@ export const AddStudent = () => {
 
   // listen for rfid tap events and notify server of register mode
   useEffect(() => {
-    const socket = ioClient(socketServerUrl);
+    const socket = ioClient(getServerUrl);
 
     // tell server to skip attendance recording while this page is open
     socket.emit("enter_register_mode");

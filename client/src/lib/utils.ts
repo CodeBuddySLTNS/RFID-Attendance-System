@@ -7,10 +7,14 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export const getServerUrl = config.isLAN
+  ? config.lanServer
+  : config.isProduction
+    ? config.prodServer
+    : config.devServer;
+
 const axiosInstance = Axios.create({
-  baseURL: config.isProduction
-    ? config.prodServer + "/api"
-    : config.devServer + "/api",
+  baseURL: getServerUrl + "/api",
 });
 
 axiosInstance.interceptors.request.use(
@@ -21,7 +25,7 @@ axiosInstance.interceptors.request.use(
     }
     return reqConfig;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 axiosInstance.interceptors.response.use(
@@ -33,10 +37,9 @@ axiosInstance.interceptors.response.use(
       try {
         const refreshToken = localStorage.getItem("refreshToken");
         if (refreshToken) {
-          const res = await Axios.post(
-            (config.isProduction ? config.prodServer : config.devServer) + "/api/auth/refresh",
-            { refreshToken }
-          );
+          const res = await Axios.post(getServerUrl + "/api/auth/refresh", {
+            refreshToken,
+          });
           const { token } = res.data;
           localStorage.setItem("token", token);
           originalRequest.headers.Authorization = `Bearer ${token}`;
@@ -51,7 +54,7 @@ axiosInstance.interceptors.response.use(
       }
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export const coleAPI =

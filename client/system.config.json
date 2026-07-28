@@ -1,5 +1,7 @@
 {
   "isProduction": true,
+  "isLAN": true,
   "prodServer": "https://rfid.ctech-solutions.site",
+  "lanServer": "http://192.168.254.110:5000",
   "devServer": "http://localhost:5000"
 }

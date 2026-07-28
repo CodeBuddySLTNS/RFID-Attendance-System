@@ -1,15 +1,13 @@
 import type { Student } from "@/types/data.types";
 import type { ColumnDef } from "@tanstack/react-table";
-import config from "../../system.config.json";
 import { Edit, Trash2 } from "lucide-react";
+import { getServerUrl } from "@/lib/utils";
 
-const url = config.isProduction
-  ? config.prodServer + "/api"
-  : config.devServer + "/api";
+const url = getServerUrl + "/api";
 
 export const studentColumns: (
   editFn: (id: number) => void,
-  deleteFn: (id: number) => void
+  deleteFn: (id: number) => void,
 ) => ColumnDef<Student>[] = (editFn, deleteFn) => [
   {
     accessorKey: "name",

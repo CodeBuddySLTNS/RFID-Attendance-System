@@ -2,6 +2,8 @@
 #include <MFRC522.h> 
 #include <WiFi.h>
 #include <HTTPClient.h>
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
 
 // wifi credentials
 const char* ssid     = "esp32";          
@@ -13,23 +15,46 @@ const char* serverUrl = "https://rfid.ctech-solutions.site/api/attendances/add";
 #define RST_PIN 9 
 #define SS_PIN  10 
 
+// pins
+const int BUZZER_PIN = 4;
+const int SDA_PIN = 1;
+const int SCL_PIN = 2;
+
 MFRC522 mfrc522(SS_PIN, RST_PIN); 
+
+// lcd init
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 // forward declaration
 void sendDataToNodeServer(String uid);
+void playTone(int frequency, int durationMs);
 
 void setup() {
   Serial.begin(115200);
   delay(2000);
   Serial.println("\n==============================");
+  
+  // init i2c
+  Wire.begin(SDA_PIN, SCL_PIN);
+  lcd.init();
+  lcd.backlight();
+  lcd.setCursor(0, 0);
+  lcd.print("Booting System...");
+  
+  // init pwm
+  ledcAttach(BUZZER_PIN, 2000, 8); 
+  
   Serial.println("Initializing SPI Bus...");
   SPI.begin(12, 13, 11, SS_PIN); 
   Serial.println("Initializing MFRC522...");
   mfrc522.PCD_Init(); 
   
-  // connect to wifi hotspot
+  // connect wifi
   Serial.print("Connecting to Hotspot: ");
   Serial.println(ssid);
+  
+  lcd.clear();
+  lcd.print("Connecting WiFi...");
   WiFi.begin(ssid, password);
 
   while (WiFi.status() != WL_CONNECTED) {
@@ -40,15 +65,25 @@ void setup() {
   Serial.println("\nWi-Fi Connected Successfully!");
   Serial.println("Setup Complete! Place your RFID card near the reader.");
   Serial.println("==============================");
+  
+  lcd.clear();
+  lcd.print("Ready to Scan");
+  lcd.setCursor(0, 1);
+  lcd.print("Place Card...");
+  
+  // boot sound
+  playTone(2500, 80);
+  delay(80);
+  playTone(2500, 80);
 } 
 
 void loop() { 
-  // check for new cards
+  // check card
   if (!mfrc522.PICC_IsNewCardPresent() || !mfrc522.PICC_ReadCardSerial()) { 
     return;
   }
   
-  // convert raw card bytes to hex string
+  // parse uid
   String cardUID = ""; 
   Serial.print("Card UID Identified: "); 
   for (byte i = 0; i < mfrc522.uid.size; i++) { 
@@ -59,19 +94,35 @@ void loop() {
   Serial.println(); 
   cardUID.toUpperCase();
   
-  // send data to server if connected
+  lcd.clear();
+  lcd.print("Card Scanned!");
+  lcd.setCursor(0, 1);
+  lcd.print("Processing...");
+  
+  // send data
   if (WiFi.status() == WL_CONNECTED) {
     sendDataToNodeServer(cardUID);
   } else {
     Serial.println("Error: Lost connection to hotspot.");
+    
+    lcd.clear();
+    lcd.print("WiFi Error!");
+    
+    playTone(600, 600); // wifi error
   }
   
   mfrc522.PICC_HaltA(); 
   mfrc522.PCD_StopCrypto1();
+  
   delay(2000);
+  
+  lcd.clear();
+  lcd.print("Ready to Scan");
+  lcd.setCursor(0, 1);
+  lcd.print("Place Card...");
 }
 
-// send data over network
+// post request
 void sendDataToNodeServer(String uid) {
   HTTPClient http;
   
@@ -79,7 +130,7 @@ void sendDataToNodeServer(String uid) {
   http.begin(serverUrl);
   http.addHeader("Content-Type", "application/json");
 
-  // construct json body
+  // json payload
   String jsonPayload = "{\"rfidTag\":\"" + uid + "\"}";
 
   int httpResponseCode = http.POST(jsonPayload);
@@ -88,10 +139,53 @@ void sendDataToNodeServer(String uid) {
     String responseString = http.getString();
     Serial.println("Server Response Code: " + String(httpResponseCode));
     Serial.println("Server Response Body: " + responseString);
+    
+    lcd.clear();
+    
+    // status check
+    if (httpResponseCode == 200 || httpResponseCode == 201) {
+      lcd.print("Access Granted");
+      lcd.setCursor(0, 1);
+      lcd.print("Welcome!");
+      
+      playTone(2000, 150); // success sound
+    } else if (httpResponseCode == 429) {
+      lcd.print("Cooldown Active!");
+      lcd.setCursor(0, 1);
+      lcd.print("Please Wait...");
+      
+      playTone(1200, 150);
+      delay(100);
+      playTone(800, 200);  // cooldown tone
+    } else if (httpResponseCode == 404) {
+      lcd.print("Unknown Card!");
+      lcd.setCursor(0, 1);
+      lcd.print("Not Registered");
+      
+      playTone(600, 400);  // unknown card sound
+    } else {
+      lcd.print("Server Error!");
+      lcd.setCursor(0, 1);
+      lcd.print("Code: " + String(httpResponseCode));
+      
+      playTone(800, 400);  // bad response sound
+    }
   } else {
     Serial.print("Failed to Reach Server. HTTP Error Code: ");
     Serial.println(httpResponseCode);
+    
+    lcd.clear();
+    lcd.print("Server Timeout!");
+    
+    playTone(800, 400);    // connection error sound
   }
   
   http.end();
+}
+
+// play buzzer
+void playTone(int frequency, int durationMs) {
+  ledcWriteTone(BUZZER_PIN, frequency);
+  delay(durationMs);
+  ledcWriteTone(BUZZER_PIN, 0); // stop sound
 }

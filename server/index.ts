@@ -26,24 +26,35 @@ const io = new Server(httpServer, {
 app.set("io", io);
 
 // track clients in register mode (add student page open)
-let registerModeClients = 0;
-app.set("registerMode", () => registerModeClients > 0);
+const registerModeSocketIds = new Set<string>();
+app.set("registerMode", () => registerModeSocketIds.size > 0);
 
 io.on("connection", (socket) => {
   console.log("socket client connected:", socket.id);
 
+  // send initial register mode status
+  socket.emit("register_mode_status", { isRegisterMode: registerModeSocketIds.size > 0 });
+
   socket.on("enter_register_mode", () => {
-    registerModeClients++;
-    console.log("register mode on, clients:", registerModeClients);
+    registerModeSocketIds.add(socket.id);
+    io.emit("register_mode_status", { isRegisterMode: true });
+    console.log("register mode on, active clients:", registerModeSocketIds.size);
   });
 
   socket.on("exit_register_mode", () => {
-    registerModeClients = Math.max(0, registerModeClients - 1);
-    console.log("register mode off, clients:", registerModeClients);
+    registerModeSocketIds.delete(socket.id);
+    const isActive = registerModeSocketIds.size > 0;
+    io.emit("register_mode_status", { isRegisterMode: isActive });
+    console.log("register mode off, active clients:", registerModeSocketIds.size);
   });
 
   socket.on("disconnect", () => {
-    // safety: if client disconnects without exiting, handled by the page emitting exit on unmount
+    if (registerModeSocketIds.has(socket.id)) {
+      registerModeSocketIds.delete(socket.id);
+      const isActive = registerModeSocketIds.size > 0;
+      io.emit("register_mode_status", { isRegisterMode: isActive });
+      console.log("register client disconnected, active clients remaining:", registerModeSocketIds.size);
+    }
   });
 });
 

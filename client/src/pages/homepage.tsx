@@ -1,5 +1,5 @@
 import { Separator } from "@/components/ui/separator";
-import { coleAPI } from "@/lib/utils";
+import { coleAPI, getServerUrl } from "@/lib/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import { Megaphone, Volume2, VolumeX } from "lucide-react";
@@ -7,18 +7,9 @@ import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import Marquee from "react-fast-marquee";
 import { toast } from "sonner";
 import { io as ioClient } from "socket.io-client";
-import config from "../../system.config.json";
 import type { Attendance } from "@/types/data.types";
 
-const url =
-  config.isProduction && config.prodServer
-    ? config.prodServer + "/api"
-    : (config.devServer || "http://localhost:5000") + "/api";
-
-const socketServerUrl =
-  config.isProduction && config.prodServer
-    ? config.prodServer
-    : config.devServer || "http://localhost:5000";
+const url = getServerUrl + "/api";
 
 interface TimeData {
   hours: string;
@@ -72,6 +63,10 @@ export const Homepage = () => {
   const rfidRef = useRef<HTMLInputElement>(null);
   const [delay, setDelay] = useState(0);
   const [currentStudent, setCurrentStudent] = useState<any>(null);
+  const [isRegisterMode, setIsRegisterMode] = useState(false);
+  const [registerScannedTag, setRegisterScannedTag] = useState<string | null>(
+    null,
+  );
 
   const [time, setTime] = useState<TimeData>({
     hours: "00",
@@ -300,7 +295,7 @@ export const Homepage = () => {
 
   // listen for real-time socket.io attendance events from esp32/server
   useEffect(() => {
-    const socket = ioClient(socketServerUrl);
+    const socket = ioClient(getServerUrl);
 
     socket.on("attendance_tapped", (studentData: any) => {
       setCurrentStudent(studentData);
@@ -319,9 +314,36 @@ export const Homepage = () => {
       speakText(textToSpeak, type);
     });
 
+    socket.on("register_mode_status", (data: { isRegisterMode: boolean }) => {
+      setIsRegisterMode(data?.isRegisterMode || false);
+    });
+
+    socket.on("register_mode_tapped", (data: { rfidTag: string }) => {
+      setRegisterScannedTag(data?.rfidTag || null);
+      if (rfidRef.current && data?.rfidTag) {
+        rfidRef.current.value = data.rfidTag;
+      }
+      toast.info(
+        `Registration Mode: Tag #${data?.rfidTag} captured for Add Student form`,
+      );
+      speakText("Card captured for registration", "IN");
+
+      setTimeout(() => {
+        setRegisterScannedTag(null);
+        if (rfidRef.current) {
+          rfidRef.current.value = "";
+        }
+      }, 3500);
+    });
+
     socket.on("attendance_error", (errorData: any) => {
       if (rfidRef.current && errorData?.rfidTag) {
         rfidRef.current.value = errorData.rfidTag;
+        setTimeout(() => {
+          if (rfidRef.current) {
+            rfidRef.current.value = "";
+          }
+        }, 3000);
       }
       if (errorData?.error === "COOLDOWN_ACTIVE") {
         toast.warning(errorData.message);
@@ -352,6 +374,7 @@ export const Homepage = () => {
   const handleRFIDInput = async (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       const rfidValue = (e.target as HTMLInputElement).value;
+      setDelay(3);
       try {
         const payload = {
           rfidTag: rfidValue,
@@ -382,7 +405,9 @@ export const Homepage = () => {
 
       return () => clearInterval(interval);
     } else {
-      rfidRef.current!.value = "";
+      if (rfidRef.current) {
+        rfidRef.current.value = "";
+      }
       // TODO: only for development
       // rfidRef.current?.focus();
       queryClient.invalidateQueries({ queryKey: ["attendances"] });
@@ -413,7 +438,11 @@ export const Homepage = () => {
       <div className="w-full p-2 lg:p-3 flex flex-col lg:grid lg:grid-cols-[450px_1fr] gap-2 lg:gap-3">
         <div className="flex justify-center items-center">
           <div className="w-full h-full flex flex-col lg:grid lg:grid-rows-[40px_1fr_40px] gap-1.5 lg:gap-2">
-            {delay > 0 && currentStudent ? (
+            {isRegisterMode ? (
+              <p className="w-full p-1 text-center text-sm lg:text-2xl font-extrabold text-white rounded bg-blue-600 animate-pulse">
+                STUDENT REGISTRATION MODE ACTIVE
+              </p>
+            ) : delay > 0 && currentStudent ? (
               (currentStudent?.type === "IN" && (
                 <p className="w-full p-1 text-center text-sm lg:text-2xl font-extrabold text-white rounded bg-green-600">
                   Welcome!
@@ -453,14 +482,6 @@ export const Homepage = () => {
                     ? `${currentStudent.department}-${currentStudent.year}`
                     : "-----"}
                 </div>
-                {delay > 0 && currentStudent?.rfidTag && (
-                  <>
-                    <Separator />
-                    <div className="text-[10px] lg:text-sm font-semibold text-gray-300 truncate">
-                      RFID: {currentStudent.rfidTag}
-                    </div>
-                  </>
-                )}
               </div>
             </div>
 
@@ -485,11 +506,17 @@ export const Homepage = () => {
               >
                 <div className="w-full flex justify-end items-center p-0.5 pr-1 lg:p-1 lg:pr-2 text-center font-extrabold text-white rounded bg-primary min-h-[28px] lg:min-h-0">
                   {attendance?.type && attendance.type === "IN" ? (
-                    <p className="w-10 lg:w-14 text-[10px] lg:text-base border lg:border-2 rounded bg-green-600">IN</p>
+                    <p className="w-10 lg:w-14 text-[10px] lg:text-base border lg:border-2 rounded bg-green-600">
+                      IN
+                    </p>
                   ) : attendance?.type && attendance.type === "OUT" ? (
-                    <p className="w-10 lg:w-14 text-[10px] lg:text-base border lg:border-2 rounded bg-red-600">OUT</p>
+                    <p className="w-10 lg:w-14 text-[10px] lg:text-base border lg:border-2 rounded bg-red-600">
+                      OUT
+                    </p>
                   ) : (
-                    <p className="w-10 lg:w-14 text-[10px] lg:text-base border lg:border-2 rounded bg-gray-400">-----</p>
+                    <p className="w-10 lg:w-14 text-[10px] lg:text-base border lg:border-2 rounded bg-gray-400">
+                      -----
+                    </p>
                   )}
                 </div>
 
@@ -534,8 +561,18 @@ export const Homepage = () => {
 
           <div className="w-full grid grid-cols-2 gap-1.5 lg:gap-2">
             <div className="w-full flex flex-col lg:grid lg:grid-rows-[max-content_1fr] text-center">
-              <div className="bg-green-700 p-1 rounded text-white font-extrabold text-[10px] lg:text-base">
-                TAP YOUR RFID CARD
+              <div
+                className={`${
+                  isRegisterMode
+                    ? "bg-blue-600 border-2 border-blue-400 animate-pulse"
+                    : "bg-green-700"
+                } p-1 rounded text-white font-extrabold text-[10px] lg:text-base`}
+              >
+                {isRegisterMode
+                  ? registerScannedTag
+                    ? `CARD SCANNED: ${registerScannedTag}`
+                    : "REGISTRATION MODE (ADDING STUDENT)"
+                  : "TAP YOUR RFID CARD"}
               </div>
 
               <input

@@ -40,8 +40,11 @@ const addAttendance = async (req: Request, res: Response) => {
     io.emit("rfid_scanned", { rfidTag });
   }
 
-  // in register mode, only broadcast the tag — skip attendance recording
+  // in register mode, broadcast register_mode_tapped and skip attendance recording
   if (isRegisterMode) {
+    if (io) {
+      io.emit("register_mode_tapped", { rfidTag });
+    }
     res.json({
       message: "RFID tag scanned (register mode)",
       rfidTag,
